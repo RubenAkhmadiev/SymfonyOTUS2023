@@ -17,3 +17,16 @@ services:
       APP_ENV: "dev"
       APP_DEBUG: "1"
       APP_SECRET: "95b54fb4f0a5924b1c7da95f513becb5"
+      DATABASE_URL: "pgsql://app:app@database/app"
+
+  database:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: "app"
+      POSTGRES_PASSWORD: "app"
+      POSTGRES_USER: "app"
+    volumes:
+      - database_data:/var/lib/postgresql/data:rw
+
+volumes:
+  database_data:
