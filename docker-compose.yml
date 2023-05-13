@@ -16,3 +16,4 @@ services:
     environment:
       APP_ENV: "dev"
       APP_DEBUG: "1"
+      APP_SECRET: "95b54fb4f0a5924b1c7da95f513becb5"
