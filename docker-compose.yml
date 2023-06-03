@@ -18,6 +18,7 @@ services:
       APP_DEBUG: "1"
       APP_SECRET: "95b54fb4f0a5924b1c7da95f513becb5"
       DATABASE_URL: "pgsql://app:app@database/app"
+      TELEGRAM_TOKEN: ""
 
   database:
     image: postgres:15-alpine
