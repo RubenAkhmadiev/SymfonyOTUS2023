@@ -2,6 +2,7 @@
 
 namespace App\Command\Telegram;
 
+use ErrorException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -33,13 +34,53 @@ class TelegramGenerateButtonsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->write($this->telegramUrl);
-        $content = file_get_contents("https://api.telegram.org/bot6177117193:AAFvjXl4Y4e2NAz9lLPpUmgbc2hCJhibWJ0/getUpdates");
+
+        $offset = 0;
+        while (true) {
+//            $output->write(324234);
+            $udates = file_get_contents("https://api.telegram.org/bot6177117193:AAFvjXl4Y4e2NAz9lLPpUmgbc2hCJhibWJ0/getUpdates?offset=$offset&timeout=60");
+
+            $content = array_shift(json_decode($udates, true)['result']);
+            if (!empty($content)) {
+                $query = [
+                    'chat_id' => $content['message']['chat']['id'],
+                    'text' => "Привет, " . $content['message']['from']['first_name'] . "!",
+                    'parse_mod' => "html",
+                ];
+
+                $this->curl("$this->telegramUrl/sendMessage", $query);
+                $offset = $content['update_id'] + 1;
+                $output->write("https://api.telegram.org/bot6177117193:AAFvjXl4Y4e2NAz9lLPpUmgbc2hCJhibWJ0/getUpdates?offset=$offset&timeout=60" . '</b>');
+            }
+        }
+//        $output->write($this->telegramUrl);
+//        $content = file_get_contents("https://api.telegram.org/bot6177117193:AAFvjXl4Y4e2NAz9lLPpUmgbc2hCJhibWJ0/getUpdates");
 //        $chat_id = -969459596;
 //        $chat_id = curl -X POST "https://api.telegram.org/bot6177117193:AAFvjXl4Y4e2NAz9lLPpUmgbc2hCJhibWJ0/sendMessage" -d "chat_id=-6177117193&text=telegram bot here!";
 
+//        $content = array_shift(json_decode($content, true)['result']);
+//        $output->write($content['message']['from']['first_name']);
+
+//        $query = [
+//            'chat_id' => $content['message']['chat']['id'],
+//            'text' => $content['message']['from']['first_name'],
+//            'parse_mod' => "html",
+//        ];
+
+//        $this->curl("$this->telegramUrl/sendMessage", $query, 'GET');
+//        return 0;
+    }
+
+    protected function getMessage()
+    {
+//        $content = file_get_contents("$this->telegramUrl/getUpdates");
+
+    }
+
+    public function buttonsTelegram()
+    {
         $keyboard = json_encode([
-        'inline_keyboard' => [
+            'inline_keyboard' => [
                 [
                     [
                         'text' => 'Купить',
@@ -71,7 +112,7 @@ class TelegramGenerateButtonsCommand extends Command
                         'callback_data' => 'test_2',
                     ],
                 ]
-           ]
+            ]
         ]);
 
         $query = [
@@ -96,17 +137,9 @@ class TelegramGenerateButtonsCommand extends Command
 //        $content = file_get_contents($urlQuery);
 
 //        $content = file_get_contents('https://api.telegram.org/bot6177117193:AAFvjXl4Y4e2NAz9lLPpUmgbc2hCJhibWJ0/getUpdates');
-        $output->write($content);
-        return 0;
     }
 
-    protected function getMessage()
-    {
-//        $content = file_get_contents("$this->telegramUrl/getUpdates");
-
-    }
-
-    function curl($url, $data = [], $method = 'GET', $options = [])
+    protected function curl($url, $data = [], $method = 'GET', $options = [])
     {
         $default_options = [
             CURLOPT_RETURNTRANSFER => true,
