@@ -3,21 +3,18 @@
 namespace App\Backoffice\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route(
+    path: '/admin',
+    name: 'app_backoffice_dashboard',
+    methods: ['GET']
+)]
 class DashboardController extends AbstractController
 {
-    #[Route(
-        path: '/admin',
-        name: 'app_backoffice_index',
-        methods: ['GET']
-    )]
-    public function index(): JsonResponse
+    public function __invoke(): Response
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/Backoffice/DashboardController.php',
-        ]);
+        return $this->render('backoffice/pages/dashboard.html.twig');
     }
 }
