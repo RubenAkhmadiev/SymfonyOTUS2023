@@ -27,7 +27,9 @@ RUN apk update \
         curl \
         wget \
         bash \
-        libmemcached-dev
+        libmemcached-dev \
+        nodejs \
+        npm
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
@@ -48,5 +50,8 @@ RUN pecl channel-update pecl.php.net \
     && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini \
     && echo "extension=event.so" > /usr/local/etc/php/conf.d/event.ini \
     && echo "extension=memcached.so" > /usr/local/etc/php/conf.d/memcached.ini
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 WORKDIR /var/www/app
