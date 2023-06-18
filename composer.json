@@ -19,6 +19,7 @@
         "symfony/http-foundation": "5.4.*",
         "symfony/runtime": "5.4.*",
         "symfony/twig-bundle": "5.4.*",
+        "symfony/webpack-encore-bundle": "^2.0",
         "symfony/yaml": "5.4.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"

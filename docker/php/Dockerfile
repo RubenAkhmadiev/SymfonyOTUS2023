@@ -27,7 +27,9 @@ RUN apk update \
         curl \
         wget \
         bash \
-        libmemcached-dev
+        libmemcached-dev \
+        nodejs \
+        npm
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
