@@ -13,12 +13,23 @@ services:
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
-    #App\:
-    #    resource: '../src/'
-    #    exclude:
-    #        - '../src/DependencyInjection/'
-    #        - '../src/Entity/'
-    #        - '../src/Kernel.php'
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Exception/'
+            - '../src/Http/'
+            - '../src/UseCase/**/Query.php'
+            - '../src/GraphQL/Error/'
+            - '../src/GraphQL/Security/'
+            - '../src/GraphQL/UseCase/**/Query.php'
+            - '../src/GraphQL/UseCase/**/Command.php'
+            - '../src/GraphQL/Context.php'
+    
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: [ 'controller.service_arguments' ]
 
     App\Backoffice\:
         resource: '../src/Backoffice/'
@@ -34,6 +45,19 @@ services:
         resource: '../src/IntegrationAPI/'
         exclude:
             - '../src/IntegrationAPI/Entity/'
+    
+    App\GraphQL\:
+        resource: '../src/GraphQL'
+        public: true
+        exclude:
+            - '../src/GraphQL/TypeRegistry.php'
+            - '../src/GraphQL/Context.php'
+            - '../src/GraphQL/Dto/'
+            - '../src/GraphQL/Type/Dto/'
+            - '../src/GraphQL/Error/'
+            - '../src/GraphQL/Security/'
+            - '../src/GraphQL/UseCase/'
+            - '../src/GraphQL/Helper/'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

@@ -10,19 +10,25 @@
         "doctrine/doctrine-bundle": "^2.9",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.15",
+        "ecodev/graphql-upload": "*",
+        "nyholm/psr7": "*",
         "sensio/framework-extra-bundle": "^6.2",
         "symfony/asset": "5.4.*",
+        "simpod/graphql-utils": "*",
         "symfony/console": "5.4.*",
         "symfony/dotenv": "5.4.*",
         "symfony/flex": "^1.17|^2",
         "symfony/framework-bundle": "5.4.*",
         "symfony/http-foundation": "5.4.*",
+        "symfony/psr-http-message-bridge": "*",
         "symfony/runtime": "5.4.*",
         "symfony/twig-bundle": "5.4.*",
         "symfony/webpack-encore-bundle": "^2.0",
         "symfony/yaml": "5.4.*",
         "twig/extra-bundle": "^2.12|^3.0",
-        "twig/twig": "^2.12|^3.0"
+        "twig/twig": "^2.12|^3.0",
+        "symfony/validator": "5.4.*",
+        "webonyx/graphql-php": "^15.5"
     },
     "config": {
         "allow-plugins": {
