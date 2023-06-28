@@ -2,6 +2,7 @@
 
 namespace App\Controller\Telegram;
 
+use http\Client\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -10,28 +11,32 @@ use Symfony\Component\Routing\Annotation\Route;
 #[AsController]
 class TelegramController
 {
-
-    public function __construct(
-        protected string $telegramToken
-    )
+    #[Route(path: '/telegram/products', name: 'telegram_products', methods: ['GET'])]
+    public function getProducts(): Response
     {
+        $data = [
+            [
+                'name' => 'Apple',
+                'price' => '10',
+                'summary' => 'Green apple'
+            ],
+            [
+                'name' => 'Orange',
+                'price' => '10',
+                'summary' => 'Green apple'
+            ],
+            [
+                'name' => 'Corn',
+                'price' => '10',
+                'summary' => 'Green apple'
+            ],
+        ];
+        return new JsonResponse(['data' => $data], Response::HTTP_OK);
     }
 
-    #[Route(path: '/telegram', name: 'telegram', methods: ['GET'])]
-    public function index(): Response
+    #[Route(path: '/telegram/pay', name: 'telegram_products', methods: ['POST'])]
+    public function orderPayment(Request $request): Response
     {
-//        $token = "6177117193:AAFvjXl4Y4e2NAz9lLPpUmgbc2hCJhibWJ0";
-//        $chat_id = -969459596;
-//        $chat_id = curl -X POST "https://api.telegram.org/bot6177117193:AAFvjXl4Y4e2NAz9lLPpUmgbc2hCJhibWJ0/sendMessage" -d "chat_id=-6177117193&text=telegram bot here!";
-
-//        $textMessage = "Telegram delivery";
-//        $textMessage = urlencode($textMessage);
-
-//        $urlQuery = "https://api.telegram.org/bot". $token ."/sendMessage?chat_id=". $chat_id ."&text=" . $textMessage;
-
-//        $content = file_get_contents($urlQuery);
-
-//        $content = file_get_contents('https://api.telegram.org/bot6177117193:AAFvjXl4Y4e2NAz9lLPpUmgbc2hCJhibWJ0/getUpdates');
-        return new JsonResponse(['data' => $this->telegramToken], Response::HTTP_OK);
+        return new JsonResponse(['data' => $request->getQuery()], Response::HTTP_OK);
     }
 }
