@@ -1,0 +1,9 @@
+{% extends 'backoffice/components/wrapper.html.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+    Index Users
+
+    {% include 'backoffice/components/table.html.twig' with {'items': users} only %}
+{% endblock %}
