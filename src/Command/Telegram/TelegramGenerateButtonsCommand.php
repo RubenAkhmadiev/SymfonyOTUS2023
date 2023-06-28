@@ -42,13 +42,16 @@ class TelegramGenerateButtonsCommand extends Command
 
             $content = array_shift(json_decode($udates, true)['result']);
             if (!empty($content)) {
-                $query = [
-                    'chat_id' => $content['message']['chat']['id'],
-                    'text' => "Привет, " . $content['message']['from']['first_name'] . "!",
-                    'parse_mod' => "html",
-                ];
+                if (!empty($content['message'])) {
+                    $query = [
+                        'chat_id' => $content['message']['chat']['id'],
+                        'text' => "Привет, " . $content['message']['from']['first_name'] . "!",
+                        'parse_mod' => "html",
+                        'reply_markup' => $this->getKeyButtons()
+                    ];
+                    $this->curl("$this->telegramUrl/sendMessage", $query);
+                }
 
-                $this->curl("$this->telegramUrl/sendMessage", $query);
                 $offset = $content['update_id'] + 1;
                 $output->write("https://api.telegram.org/bot6177117193:AAFvjXl4Y4e2NAz9lLPpUmgbc2hCJhibWJ0/getUpdates?offset=$offset&timeout=60" . '</b>');
             }
@@ -75,6 +78,21 @@ class TelegramGenerateButtonsCommand extends Command
     {
 //        $content = file_get_contents("$this->telegramUrl/getUpdates");
 
+    }
+
+    protected function getKeyButtons()
+    {
+        return  json_encode([
+            'inline_keyboard' => [
+                [
+                    [
+                        'text' => 'Открыть магазин',
+                        'url' => 'http://localhost:8080/',
+                        'callback_data' => 'test_2',
+                    ],
+                ]
+            ]
+        ]);
     }
 
     public function buttonsTelegram()
