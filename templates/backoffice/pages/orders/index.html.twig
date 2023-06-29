@@ -1,0 +1,9 @@
+{% extends 'backoffice/components/wrapper.html.twig' %}
+
+{% block title %}Orders{% endblock %}
+
+{% block content %}
+    Index Orders
+
+    {% include 'backoffice/components/table.html.twig' with {'items': orders} only %}
+{% endblock %}
