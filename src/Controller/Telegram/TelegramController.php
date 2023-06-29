@@ -2,16 +2,21 @@
 
 namespace App\Controller\Telegram;
 
-use http\Client\Request;
+//use http\Client\Request;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-//#[AsController]
 class TelegramController extends AbstractController
 {
+    #[Route(path: '/telegram/web-app', name: 'telegram_web-app', methods: ['GET'])]
+    public function webApp(): Response
+    {
+
+    }
+
     #[Route(path: '/telegram/products', name: 'telegram_products', methods: ['GET'])]
     public function getProducts(): Response
     {
@@ -38,7 +43,8 @@ class TelegramController extends AbstractController
     #[Route(path: '/telegram/pay', name: 'telegram_pay', methods: ['POST'])]
     public function orderPayment(Request $request): Response
     {
-        return new JsonResponse(['data' => 123423], Response::HTTP_OK);
+
+        return new JsonResponse(['data' => $request->request->get('id')], Response::HTTP_OK);
 
 //        return new JsonResponse(['data' => $request->getQuery()], Response::HTTP_OK);
     }

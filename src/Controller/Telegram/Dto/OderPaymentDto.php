@@ -3,7 +3,6 @@
 namespace App\Controller\Telegram\Dto;
 
 //use App\Entity\Traits\SafeLoadFieldsTrait;
-use MusicPlatform\PhpLib\Http\RequestResolver\RequestDtoInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class OderPaymentDto

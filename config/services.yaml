@@ -26,6 +26,10 @@ services:
         resource: '../src/Backoffice/'
         exclude:
             - '../src/Backoffice/Entity/'
+                
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: [ 'controller.service_arguments' ]            
 
     App\Customer\:
         resource: '../src/Customer/'
