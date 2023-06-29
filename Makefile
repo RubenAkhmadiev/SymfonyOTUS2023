@@ -10,3 +10,7 @@ exec:
 	docker-compose exec -it ${CONTAINER_NAME} sh
 fixtures:
 	docker-compose exec -it ${CONTAINER_NAME} php bin/console doctrine:fixtures:load --purge-with-truncate
+diff:
+	docker-compose exec -it ${CONTAINER_NAME} php bin/console doctrine:migrations:diff
+migrate:
+	docker-compose exec -it ${CONTAINER_NAME} php bin/console doctrine:migrations:migrate
