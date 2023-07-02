@@ -17,6 +17,9 @@ class User
     #[ORM\Column]
     private int $id;
 
+    #[ORM\Column]
+    private int $telegram_id;
+
     #[ORM\Column(length: 255)]
     private string $login;
 
@@ -40,6 +43,18 @@ class User
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getTelegramId(): int
+    {
+        return $this->telegram_id;
+    }
+
+    public function setTelegramId(int $telegramId): static
+    {
+        $this->telegram_id = $telegramId;
+
+        return $this;
     }
 
     public function getLogin(): string

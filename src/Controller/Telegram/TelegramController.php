@@ -2,7 +2,9 @@
 
 namespace App\Controller\Telegram;
 
-//use http\Client\Request;
+use App\Controller\Telegram\Dto\OrderPaymentDto;
+use App\Manager\Telegram\OrderManager;
+use App\Manager\UserManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,6 +13,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TelegramController extends AbstractController
 {
+    public function __construct(
+        private readonly OrderManager $orderManager
+    )
+    {
+    }
+
     #[Route(path: '/telegram/web-app', name: 'telegram_web-app', methods: ['GET'])]
     public function webApp(): Response
     {
@@ -43,9 +51,9 @@ class TelegramController extends AbstractController
     #[Route(path: '/telegram/pay', name: 'telegram_pay', methods: ['POST'])]
     public function orderPayment(Request $request): Response
     {
+        $orderDto = OrderPaymentDto::fromRequest($request);
+        $id = $this->orderManager->createOrder($orderDto);
 
-        return new JsonResponse(['data' => $request->request->get('id')], Response::HTTP_OK);
-
-//        return new JsonResponse(['data' => $request->getQuery()], Response::HTTP_OK);
+        return new JsonResponse(['id' => $id], Response::HTTP_CREATED);
     }
 }
