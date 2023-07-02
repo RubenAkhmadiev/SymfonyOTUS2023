@@ -2,6 +2,10 @@ controllers:
     resource: ../../src/Controller/
     type: annotation
 
+backoffice_controllers:
+    resource: ../../src/Backoffice/Controller/
+    type: annotation
+
 kernel:
     resource: ../../src/Kernel.php
     type: annotation

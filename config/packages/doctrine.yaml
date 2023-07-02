@@ -16,6 +16,11 @@ doctrine:
                 prefix: 'App\Entity'
                 alias: App
                 type: attribute
+            Backoffice:
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Backoffice/Entity'
+                prefix: 'App\Backoffice\Entity'
+                type: attribute
 
 when@test:
     doctrine:
