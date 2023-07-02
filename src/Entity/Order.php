@@ -117,4 +117,15 @@ class Order
 
         return $this;
     }
+
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'number' => $this->getNumber(),
+            'creation_date' => $this->getCreationDate(),
+            'sum' => $this->getSum(),
+        ];
+    }
 }

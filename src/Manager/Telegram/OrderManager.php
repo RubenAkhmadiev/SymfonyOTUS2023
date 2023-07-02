@@ -5,21 +5,21 @@ namespace App\Manager\Telegram;
 use App\Controller\Telegram\Dto\OrderPaymentDto;
 use App\Entity\Order;
 use App\Entity\User;
-use App\Entity\UserProfile;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use DateTime;
 
 class OrderManager
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
+        private readonly UserManager $userManager,
     ) {
     }
 
     public function createOrder(OrderPaymentDto $orderPaymentDto): ?int
     {
-        $user = $this->createOrUpdateUser(
-            $orderPaymentDto->userId,
+        $user = $this->userManager->createOrUpdateUser(
+            $orderPaymentDto->telegramId,
             $orderPaymentDto->firstName,
             $orderPaymentDto->secondName,
             $orderPaymentDto->phone,
@@ -28,43 +28,25 @@ class OrderManager
 
         $order = new Order();
         $order->setUserId($user);
+        $order->setNumber(213);
         $order->setSum($orderPaymentDto->sum);
+        $order->setCreationDate(new DateTime());
         $this->entityManager->persist($order);
         $this->entityManager->flush();
 
         return $order->getId();
     }
 
-    public function createOrUpdateUser(
-        int $userId, string $firstName, string $secondName, string $phone, string $address
-    ): User
+    public function userOrders(int $userId): ?array
     {
         $userRepository = $this->entityManager->getRepository(User::class);
-        $userProfileRepository = $this->entityManager->getRepository(UserProfile::class);
-
         $user = $userRepository->find($userId);
 
-        if (!$user) {
-            $user = new User();
-            $user->setId($userId);
+        $arrayOrders = [];
+        foreach ($user->getOrders() as $order) {
+            $arrayOrders[] = $order->toArray();
         }
 
-        $userProfile = $userProfileRepository->find($user->getProfile()->getId());
-        if (!$userProfile) {
-            $userProfile = new UserProfile();
-        }
-
-        $userProfile->setFirstName($firstName);
-        $userProfile->setSecondName($secondName);
-        $userProfile->setPhone($phone);
-        $userProfile->setAddresses([$address]);
-        $userProfile->setPhone($phone);
-
-        $user->setLogin($firstName);
-        $user->setAd($name);
-        $user->setLogin($name);
-        $user->setLogin($name);
-
-        return $user;
+        return $arrayOrders;
     }
 }
