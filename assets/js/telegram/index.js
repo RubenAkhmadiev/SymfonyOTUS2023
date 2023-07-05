@@ -1,6 +1,6 @@
 //Initialization constants
 const removeBasketClassName = "remove-basket";
-const apiUrl = "https://b45d-83-139-137-205.ngrok-free.app/telegram/products";
+const apiUrl = "http://127.0.0.1:8015";
 // const telegram = window.Telegram.WebApp;
 
 // console.log(telegram.initDataUnsafe.user.id);
@@ -51,10 +51,11 @@ let addProduct = function(item) {
   };
 
 let getProducts = async function() {
-  let response = await fetch(apiUrl);
+  let response = await fetch(apiUrl + "/telegram/products");
 
   if (response.ok) {
     let products = await response.json();
+    console.log(products);
     products.forEach((item, index) => {
       if (index < 6) {
         showProduct(item);
@@ -76,7 +77,7 @@ let showProduct = function(item) {
   let itemMenuTitleDiv = document.createElement("div");
   itemMenuTitleDiv.classList = "item-menu-title";
   // itemMenuTitleDiv.innerHTML = item.title.slice(0, 5) + telegram.initDataUnsafe.user.id;
-  itemMenuTitleDiv.innerHTML = item.title.slice(0, 5);
+  itemMenuTitleDiv.innerHTML = item.name.slice(0, 5) + ":" + item.price;
 
   let itemMenuImg = document.createElement("img");
   itemMenuImg.src = "assets/images/imageFood.jpg";
@@ -111,17 +112,26 @@ let finishOrder = function() {
     console.log(formData.get("name"));
     const formDataObject = {
       name: formData.get("name"),
-      phone: formData.get("name"),
-      email: formData.get("name"),
-      address: formData.get("name")
+      phone: formData.get("phone"),
+      email: formData.get("email"),
+      address: formData.get("address")
     };
 
-    const request = new Request("http://action",
+    let formDataRequest = new FormData();
+    formDataRequest.append('name', formData.get("name"));
+    formDataRequest.append('phone', formData.get("phone"));
+    formDataRequest.append('email', formData.get("email"));
+    formDataRequest.append('address', formData.get("address"));
+
+    console.log(formDataRequest);
+
+    fetch(apiUrl + "/telegram/pay",
       {
-        method: "POST",
-        body: JSON.stringify(formDataObject)
+        body: formDataRequest,
+        method: "post"
       });
 
+    // console.log(request.json());
     request.json().then(function() {
       alert("Успешно оформлен")
     });

@@ -35,7 +35,7 @@ class TelegramController extends AbstractController
         $perPage = (int) $request->query->get('perPage', 10);
 
         $items = $this->itemManager->getItems($page, $perPage);
-        return new JsonResponse(['data' => $items], Response::HTTP_OK);
+        return new JsonResponse($items, Response::HTTP_OK);
     }
 
     #[Route(path: '/telegram/pay', name: 'telegram_pay', methods: ['POST'])]

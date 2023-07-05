@@ -39,13 +39,13 @@ class OrderPaymentDto
     public static function fromRequest(Request $request): self
     {
         return new self (
-            telegramId: $request->request->get('telegram_id'),
-            firstName: $request->request->get('first_name'),
-            secondName: $request->request->get('second_name'),
+            telegramId: $request->request->get('telegram_id', 833499252),
+            firstName: $request->request->get('name'),
+            secondName: $request->request->get('name'),
             phone: $request->request->get('phone'),
             address: $request->request->get('address'),
-            itemIds: explode(',', $request->request->get('item_ids')),
-            sum: $request->request->get('sum'), // фиксированная сумма на момент оформления заказа
+            itemIds: explode(',', $request->request->get('item_ids', '')),
+            sum: $request->request->get('sum', 100), // фиксированная сумма на момент оформления заказа
         );
     }
 }
