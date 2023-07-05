@@ -2,6 +2,7 @@
 
 namespace App\Controller\Telegram;
 
+use App\Backoffice\View\Table;
 use App\Controller\Telegram\Dto\OrderPaymentDto;
 use App\Manager\Telegram\ItemManager;
 use App\Manager\Telegram\OrderManager;
@@ -24,6 +25,7 @@ class TelegramController extends AbstractController
     #[Route(path: '/telegram/web-app', name: 'telegram_web-app', methods: ['GET'])]
     public function webApp(): Response
     {
+        return $this->render('telegram/pages/index.html.twig');
     }
 
     #[Route(path: '/telegram/products', name: 'telegram_products', methods: ['GET'])]

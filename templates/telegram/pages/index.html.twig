@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>webAppTelegram</title>
+
+    {{ encore_entry_link_tags('telegram') }}
+</head>
+<body>
+<div class="container">
+    <div class="container-menu">
+        <div id="menu" class="menu">
+
+            <!--      <div class="item-menu">-->
+            <!--        <div class="item-menu-title">Суп</div>-->
+            <!--        <img src="assets/images/imageFood.jpg" alt="">-->
+            <!--        <div class="item-menu-price"></div>-->
+            <!--        <button class="add-basket">Добавить</button>-->
+            <!--      </div>-->
+        </div>
+
+        <div class="buttons">
+            <button id="pay" class="button-item">Оплатить <span id="countProductsValue">0</span> товаров</button>
+        </div>
+    </div>
+
+    <div class="container-pay display-none">
+        <div class="title-pay">
+            <h2>Оформление:</h2>
+        </div>
+        <form id="formPay" method="post">
+            <div class="data-input">
+                <label for="name">ФИО:</label>
+                <input name="name" id="name" type="text" required>
+            </div>
+            <div class="data-input">
+                <label for="phone">Телефон:</label>
+                <input name="phone" id="phone" type="text" required>
+            </div>
+            <div class="data-input">
+                <label for="email">Email:</label>
+                <input name="email" id="email" type="text" required>
+            </div>
+            <div class="data-input">
+                <label for="address">Адрес:</label>
+                <input name="address" id="address" type="text" required>
+            </div>
+            <div>
+                <button id="payButton">Завершить!</button>
+            </div>
+        </form>
+    </div>
+</div>
+{{ encore_entry_script_tags('telegram') }}
+</body>
+</html>
