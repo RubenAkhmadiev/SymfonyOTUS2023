@@ -2,6 +2,7 @@
 
 namespace App\Http\Request;
 
+use MusicPlatform\PhpLib\Http\RequestResolver\RequestDtoInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 final class GraphQLRequest implements RequestDtoInterface

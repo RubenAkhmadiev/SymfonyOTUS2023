@@ -85,9 +85,7 @@ class GraphQL
         $formatted = Error\FormattedError::createFromException($error, $config->getDebugFlag());
 
         // Выбор уровня сообщения и его логирование
-        $levelMethod = 'internal' === $formatted['extensions']['category']
-            ? 'error'
-            : 'warning';
+        $levelMethod = 'info';
 
         $exceptionWrapper = ExceptionWrapper::createFromException($error);
         $this->logger->$levelMethod(

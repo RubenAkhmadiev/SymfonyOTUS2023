@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserProfileRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,11 +28,16 @@ class UserProfile
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $birth_day = null;
 
-    #[ORM\Column]
-    private array $addresses = [];
-
     #[ORM\OneToOne(mappedBy: 'profile', cascade: ['persist', 'remove'])]
     private ?User $user = null;
+
+    #[ORM\OneToMany(mappedBy: 'profile', targetEntity: Address::class, orphanRemoval: true)]
+    private Collection $addresses;
+
+    public function __construct()
+    {
+        $this->addresses = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -85,18 +92,6 @@ class UserProfile
         return $this;
     }
 
-    public function getAddresses(): array
-    {
-        return $this->addresses;
-    }
-
-    public function setAddresses(array $addresses): static
-    {
-        $this->addresses = $addresses;
-
-        return $this;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -115,6 +110,36 @@ class UserProfile
         }
 
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Address>
+     */
+    public function getAddresses(): Collection
+    {
+        return $this->addresses;
+    }
+
+    public function addAddress(Address $address): static
+    {
+        if (!$this->addresses->contains($address)) {
+            $this->addresses->add($address);
+            $address->setProfile($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddress(Address $address): static
+    {
+        if ($this->addresses->removeElement($address)) {
+            // set the owning side to null (unless already changed)
+            if ($address->getProfile() === $this) {
+                $address->setProfile(null);
+            }
+        }
 
         return $this;
     }
