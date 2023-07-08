@@ -1,14 +1,20 @@
 //Initialization constants
-const removeBasketClassName = "remove-basket";
-const apiUrl = "http://127.0.0.1:8015";
-// const telegram = window.Telegram.WebApp;
+const removeBasketClassName = "remove-basket",
+      apiUrl = "http://127.0.0.1:8019",
+      perPage = 6
+const telegram = window.Telegram.WebApp;
 
-// console.log(telegram.initDataUnsafe.user.id);
+//Initialization variables
+let productIds = [],
+    sumProduct = 0,
+    page = 0
 
 document.addEventListener('DOMContentLoaded', function() {
   getProducts();
   pay();
   finishOrder();
+  backPage();
+  nextPage();
 });
 
 let countProductsValue = 0,
@@ -37,6 +43,8 @@ let countProductsValue = 0,
 
         let countProductsValueElement = document.getElementById("countProductsValue");
         countProductsValueElement.innerHTML = countProductsValue;
+        let sumProductElem = document.getElementById("sumProducts");
+        sumProductElem.innerHTML = sumProduct;
       });
     });
   };
@@ -44,14 +52,28 @@ let countProductsValue = 0,
 let addProduct = function(item) {
     item.innerHTML = "Убрать";
     countProductsValue += 1;
+    sumProduct += parseInt(item.parentElement.getElementsByClassName('item-menu-price')[0].innerHTML.slice(5));
+    productIds.push(item.parentElement.getElementsByClassName('item-menu-title')[0].getAttribute('data-id'));
+    console.log(productIds.toString());
   },
   removeProduct = function(item) {
     item.innerHTML = "Добавить";
     countProductsValue -= 1;
-  };
+    sumProduct -= parseInt(item.parentElement.getElementsByClassName('item-menu-price')[0].innerHTML.slice(5));
+    removeItemFromArrayProducts(item.parentElement.getElementsByClassName('item-menu-title')[0].getAttribute('data-id'));
+    console.log(productIds.toString());
+  },
+  removeItemFromArrayProducts = function(id) {
+    let index = productIds.indexOf(id);
+    if (index !== -1) {
+      productIds.splice(index, 1);
+    }
+}
+
+
 
 let getProducts = async function() {
-  let response = await fetch(apiUrl + "/telegram/products");
+  let response = await fetch(`/telegram/products?page=${page}&perPage=${perPage}`);
 
   if (response.ok) {
     let products = await response.json();
@@ -61,7 +83,7 @@ let getProducts = async function() {
         showProduct(item);
       }
     });
-
+    // document.getElementById("menu").classList.toggle("display-none");
     clickProducts();
   } else {
     console.log("Не удалось получить данные с сервера, код ошибки: " + response.status);
@@ -69,21 +91,20 @@ let getProducts = async function() {
 };
 
 let showProduct = function(item) {
-  // console.log(item.title);
-
   let itemMenuDiv = document.createElement("div");
   itemMenuDiv.classList = "item-menu";
 
   let itemMenuTitleDiv = document.createElement("div");
   itemMenuTitleDiv.classList = "item-menu-title";
-  // itemMenuTitleDiv.innerHTML = item.title.slice(0, 5) + telegram.initDataUnsafe.user.id;
-  itemMenuTitleDiv.innerHTML = item.name.slice(0, 5) + ":" + item.price;
+  itemMenuTitleDiv.setAttribute('data-id', item.id)
+  itemMenuTitleDiv.innerHTML = item.name.slice(0, 5);
 
   let itemMenuImg = document.createElement("img");
-  itemMenuImg.src = "assets/images/imageFood.jpg";
+  itemMenuImg.src = "/images/imageFood.jpg";
 
   let itemMenuPriceDiv = document.createElement("div");
   itemMenuPriceDiv.classList = "item-menu-price";
+  itemMenuPriceDiv.innerHTML = "Цена:" + item.price;
 
   let addBasketButton = document.createElement("button");
   addBasketButton.classList = "add-basket";
@@ -96,6 +117,10 @@ let showProduct = function(item) {
 let pay = function() {
   let payButton = document.getElementById("pay");
   payButton.addEventListener("click", function() {
+    if (productIds.length === 0) {
+      return alert("Выберите пожалуйста товары для покупки");
+    }
+
     let containerMenu = document.querySelectorAll(".container-menu"),
       containerPay = document.querySelectorAll(".container-pay");
 
@@ -110,30 +135,50 @@ let finishOrder = function() {
     event.preventDefault();
     const formData = new FormData(event.target);
     console.log(formData.get("name"));
-    const formDataObject = {
-      name: formData.get("name"),
-      phone: formData.get("phone"),
-      email: formData.get("email"),
-      address: formData.get("address")
-    };
 
     let formDataRequest = new FormData();
     formDataRequest.append('name', formData.get("name"));
+    formDataRequest.append('sername', formData.get("sername"));
     formDataRequest.append('phone', formData.get("phone"));
     formDataRequest.append('email', formData.get("email"));
     formDataRequest.append('address', formData.get("address"));
+    formDataRequest.append('item_ids', productIds.toString());
+    formDataRequest.append('sum', sumProduct);
+    if (telegram.initDataUnsafe.user) {
+      formDataRequest.append('telegram_id', telegram.initDataUnsafe.user.id);
+    }
 
     console.log(formDataRequest);
 
-    fetch(apiUrl + "/telegram/pay",
+    fetch("/telegram/pay",
       {
         body: formDataRequest,
         method: "post"
       });
 
-    // console.log(request.json());
-    request.json().then(function() {
-      alert("Успешно оформлен")
-    });
+    document.querySelectorAll(".container-pay")[0].classList.toggle("display-none");
+    document.querySelectorAll(".container-successful")[0].classList.toggle("display-none");
   });
-}
+},
+
+  backPage = function() {
+    buttonBackPage = document.getElementById('backPage');
+    buttonBackPage.addEventListener('click', elem => {
+       if (page - 1 >= 0) {
+         page--;
+       }
+      document.getElementById("menu").innerHTML = '';
+      getProducts();
+      console.log(page);
+    });
+  },
+
+  nextPage = function() {
+    buttonNextBackPage = document.getElementById('nextPage');
+    buttonNextBackPage.addEventListener('click', elem => {
+      page++;
+      document.getElementById("menu").innerHTML = '';
+      getProducts();
+      console.log(page);
+    });
+  }

@@ -20,7 +20,11 @@
         </div>
 
         <div class="buttons">
-            <button id="pay" class="button-item">Оплатить <span id="countProductsValue">0</span> товаров</button>
+            <div class="buttons-control-page">
+                <button id="backPage" class="button-item">Назад</button>
+                <button id="nextPage" class="button-item">Дальше</button>
+            </div>
+            <button id="pay" class="button-item">Оплатить <span id="countProductsValue">0</span> товаров на сумму: <span id="sumProducts">0</span></button>
         </div>
     </div>
 
@@ -30,27 +34,33 @@
         </div>
         <form id="formPay" method="post">
             <div class="data-input">
-                <label for="name">ФИО:</label>
+                <label for="name">Имя:</label>
                 <input name="name" id="name" type="text" required>
+            </div>
+            <div class="data-input">
+                <label for="sername">Фамилия:</label>
+                <input name="sername" id="sername" type="text" required>
             </div>
             <div class="data-input">
                 <label for="phone">Телефон:</label>
                 <input name="phone" id="phone" type="text" required>
             </div>
             <div class="data-input">
-                <label for="email">Email:</label>
-                <input name="email" id="email" type="text" required>
-            </div>
-            <div class="data-input">
                 <label for="address">Адрес:</label>
                 <input name="address" id="address" type="text" required>
             </div>
             <div>
-                <button id="payButton">Завершить!</button>
+                <button id="payButton" class="button-item">Завершить!</button>
             </div>
         </form>
     </div>
+
+    <div class="container-successful display-none">
+        <h2>Спасибо за покупку!</h2>
+        <img class="bonus" src="/images/bonus.png" alt="">
+    </div>
 </div>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 {{ encore_entry_script_tags('telegram') }}
 </body>
 </html>

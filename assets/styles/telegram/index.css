@@ -1,14 +1,15 @@
 .container {
     background: gold;
     max-width: 390px;
-}
-
-.container .display-none {
-    display: none;
+    height: 773px;
 }
 
 .container .container-menu {
+    height: 100%;
     box-shadow: 1px 1px 1px 1px black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .container .menu {
@@ -48,7 +49,7 @@
     align-content: center;
 }
 
-.container .buttons .button-item {
+.container .button-item {
     text-decoration: none;
     background: seagreen;
     border: none;
@@ -90,4 +91,33 @@
     margin-top: 3%;
     cursor: pointer;
     padding: 1%;
+}
+
+.container .buttons .buttons-control-page {
+    display: flex;
+}
+
+.container .buttons .buttons-control-page button {
+    background: #bedb33;
+}
+
+.container .container-successful {
+    padding: 20px;
+}
+
+.container .container-successful h2 {
+    text-align: center;
+    color: black;
+    font-size: 40px;
+}
+
+.container .bonus {
+    max-width: 300px;
+    align-content: center;
+    text-align: center;
+    margin-left: 25px;
+}
+
+.container .display-none {
+    display: none;
 }

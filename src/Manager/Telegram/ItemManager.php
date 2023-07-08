@@ -3,6 +3,7 @@
 namespace App\Manager\Telegram;
 
 use App\Entity\Item;
+use App\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ItemManager

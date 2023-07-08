@@ -18,10 +18,12 @@ class OrderManager
 
     public function createOrder(OrderPaymentDto $orderPaymentDto): ?int
     {
+        $conn = $this->entityManager->getConnection();
+
         $user = $this->userManager->createOrUpdateUser(
             $orderPaymentDto->telegramId,
-            $orderPaymentDto->firstName,
-            $orderPaymentDto->secondName,
+            $orderPaymentDto->name,
+            $orderPaymentDto->sername,
             $orderPaymentDto->phone,
             $orderPaymentDto->address
         );
@@ -33,6 +35,15 @@ class OrderManager
         $order->setCreationDate(new DateTime());
         $this->entityManager->persist($order);
         $this->entityManager->flush();
+
+        foreach ($orderPaymentDto->itemIds as $itemId) {
+            $sql = <<<SQL
+            insert into public.item_order (item_id, order_id)
+            values (:item_id, :order_id)
+        SQL;
+
+            $conn->executeQuery($sql, ['item_id' => $itemId, 'order_id' => $order->getId()]);
+        }
 
         return $order->getId();
     }

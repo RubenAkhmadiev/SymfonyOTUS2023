@@ -32,7 +32,7 @@ class TelegramController extends AbstractController
     public function getProducts(Request $request): Response
     {
         $page = (int) $request->query->get('page', 0);
-        $perPage = (int) $request->query->get('perPage', 10);
+        $perPage = (int) $request->query->get('perPage', 6);
 
         $items = $this->itemManager->getItems($page, $perPage);
         return new JsonResponse($items, Response::HTTP_OK);

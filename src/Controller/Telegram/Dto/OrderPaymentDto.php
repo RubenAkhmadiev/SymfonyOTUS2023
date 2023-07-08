@@ -13,11 +13,11 @@ class OrderPaymentDto
 
         #[Assert\Type('string')]
         #[Assert\Length(max: 32)]
-        public ?string $firstName = null,
+        public ?string $name = null,
 
         #[Assert\Type('string')]
         #[Assert\Length(max: 32)]
-        public ?string $secondName = null,
+        public ?string $sername = null,
 
         #[Assert\Type('string')]
         #[Assert\Length(max: 32)]
@@ -40,12 +40,12 @@ class OrderPaymentDto
     {
         return new self (
             telegramId: $request->request->get('telegram_id', 833499252),
-            firstName: $request->request->get('name'),
-            secondName: $request->request->get('name'),
+            name: $request->request->get('name'),
+            sername: $request->request->get('sername'),
             phone: $request->request->get('phone'),
             address: $request->request->get('address'),
             itemIds: explode(',', $request->request->get('item_ids', '')),
-            sum: $request->request->get('sum', 100), // фиксированная сумма на момент оформления заказа
+            sum: (int) $request->request->get('sum', 100), // фиксированная сумма на момент оформления заказа
         );
     }
 }
