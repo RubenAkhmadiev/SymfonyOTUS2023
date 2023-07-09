@@ -16,7 +16,7 @@ final class BackofficeAdapter
     }
 
     /**
-     * @return array
+     * @return array{has_more: bool, items: PartnerDto[]}
      */
     public function getPartners(
         int $limit = 20,
@@ -31,7 +31,7 @@ final class BackofficeAdapter
 
         return [
             'has_more' => $result['has_more'],
-            'result'   => array_map(
+            'items'    => array_map(
                 static fn(Partner $partnerEntity) => PartnerDto::fromEntity($partnerEntity),
                 $result['items'],
             ),
