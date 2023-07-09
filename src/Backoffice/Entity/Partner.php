@@ -3,9 +3,10 @@
 namespace App\Backoffice\Entity;
 
 use App\Backoffice\Enum\PartnerTypeEnum;
+use App\Backoffice\Repository\PartnerRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: PartnerRepository::class)]
 #[ORM\Table(name: '`partner`', schema: 'backoffice')]
 #[ORM\HasLifecycleCallbacks]
 class Partner

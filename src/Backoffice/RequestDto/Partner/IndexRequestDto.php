@@ -13,16 +13,16 @@ class IndexRequestDto implements RequestDtoInterface
         #[Assert\Positive]
         public int $limit,
 
-        #[Assert\Positive]
-        public int $offset,
+        #[Assert\PositiveOrZero]
+        public int $page,
     ) {
     }
 
     public static function fromRequest(Request $request): self
     {
         return new self(
-            limit: $request->get('limit'),
-            offset: $request->get('offset'),
+            limit: $request->get('limit', 20),
+            page: $request->get('page', 0),
         );
     }
 }

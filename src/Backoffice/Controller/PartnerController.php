@@ -2,6 +2,8 @@
 
 namespace App\Backoffice\Controller;
 
+use App\Backoffice\Entity\Partner;
+use App\Backoffice\Service\PartnerService;
 use App\Backoffice\RequestDto\Partner\{IndexRequestDto};
 use App\Backoffice\View\Table;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,8 +18,9 @@ class PartnerController extends AbstractController
     use ValidateTrait;
 
     public function __construct(
-        EntityManagerInterface $em,
-        ValidatorInterface $validator,
+        EntityManagerInterface   $em,
+        ValidatorInterface       $validator,
+        protected PartnerService $partnerService,
     ) {
         $this->setValidator($validator);
     }
@@ -29,19 +32,27 @@ class PartnerController extends AbstractController
     )]
     public function index(Request $request): Response
     {
+        /** @var IndexRequestDto $dto */
         $dto = $this->validate($request, IndexRequestDto::class);
 
-        $body = [
-            ['a','b','c'],
-            ['c','v','h'],
-        ];
+        $result = $this->partnerService->getAll(
+            limit: $dto->limit,
+            page: $dto->page,
+        );
+
+        $body = array_map(static fn(Partner $partner) => [
+            'id'   => $partner->getId(),
+            'name' => $partner->getName(),
+            'type' => $partner->getType()->getName(),
+        ], $result['items']);
 
         return $this->render('backoffice/pages/partners/index.html.twig', [
             'partners' => (new Table())
-                ->setHeader('1')
-                ->setHeader('2')
-                ->setHeader('3')
+                ->setHeader('ID')
+                ->setHeader('Название')
+                ->setHeader('Тип')
                 ->setData($body)
+                ->setPage($dto->page, $result['has_more'], $dto->limit)
         ]);
     }
 }

@@ -1,0 +1,20 @@
+{% set limit = { limit: limit } %}
+{% set prevPageQuery = limit + {page: prevPage} %}
+{% set nextPageQuery = limit + {page: nextPage} %}
+<li>
+    <ul>
+        {% if prevPage is not null %}
+            <a href="{{ path('app_backoffice_partners_index', prevPageQuery) }}">[<]</a>
+        {% else %}
+            [ ]
+        {% endif %}
+    </ul>
+    <ul>{{ page }}</ul>
+    <ul>
+        {% if nextPage %}
+            <a href="{{ path('app_backoffice_partners_index', nextPageQuery) }}">[>]</a>
+        {% else %}
+            [ ]
+        {% endif %}
+    </ul>
+</li>
