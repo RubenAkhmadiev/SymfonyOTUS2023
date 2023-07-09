@@ -2,7 +2,9 @@
 
 namespace App\GraphQL\Mutation;
 
+use App\ApiUser\CurrentUser;
 use App\Entity\UserProfile;
+use App\GraphQL\Error\ClientAwareException;
 use App\GraphQL\SchemaBuilder\Argument;
 use App\GraphQL\SchemaBuilder\Mutation;
 use App\GraphQL\TypeRegistry;
@@ -13,7 +15,8 @@ class CreateUserProfile implements MutationInterface
 {
     public function __construct(
         private TypeRegistry $registry,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private CurrentUser $currentUser,
     ) {
     }
 
@@ -30,8 +33,12 @@ class CreateUserProfile implements MutationInterface
             ->withResolver(
                 function (mixed $root, array $args): int {
 
+                    if (!$this->currentUser->isAuthorized()) {
+                        throw ClientAwareException::createAccessDenied();
+                    }
+
                     $userProfile = new UserProfile();
-//        $userProfile->setUser();
+//                    $userProfile->setUser($this->currentUser->getProfile());
                     $userProfile->setFirstName($args['firstName']);
                     $userProfile->setSecondName($args['secondName']);
                     $userProfile->setPhone($args['phone']);

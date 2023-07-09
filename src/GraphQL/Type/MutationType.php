@@ -14,6 +14,7 @@ final class MutationType extends ObjectType
         $mutations = [
             $container->get(Mutation\AuthenticateByPassword::class),
             $container->get(Mutation\CreateUserProfile::class),
+            $container->get(Mutation\CreateUser::class),
         ];
 
         $fields = array_combine(

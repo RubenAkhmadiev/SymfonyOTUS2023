@@ -2,47 +2,50 @@
 
 namespace App\GraphQL\Mutation;
 
+use App\GraphQL\Error\CategoryEnum;
+use App\GraphQL\Error\ClientAwareException;
+use App\GraphQL\SchemaBuilder\Argument;
+use App\GraphQL\SchemaBuilder\Mutation;
 use App\GraphQL\TypeRegistry;
-use GraphQL\Type\Definition\Type;
+use App\Security\TokenManager;
+use Symfony\Component\Validator\Exception\ValidationFailedException;
 
-class AuthenticateByPassword extends Mutation
+class AuthenticateByPassword implements MutationInterface
 {
     public function __construct(
-        private readonly TypeRegistry $registry
+        private TypeRegistry $registry,
+        private TokenManager $tokenManager,
     ) {
     }
 
-    public function getName(): string
+    public function build(): array
     {
-        return 'authenticateByPassword';
-    }
+        return Mutation::create($this->registry->string())
+            ->withDescription('Аутентификация пользователя по email и паролю')
+            ->withArguments(
+                Argument::create('email', $this->registry->string()),
+                Argument::create('password', $this->registry->string()),
+            )
+            ->withResolver(
+                function (mixed $root, array $args): string {
+                    try {
+                        $userId = 2;
 
-    public function getDescription(): ?string
-    {
-        return 'Аутентификация пользователя по логину и паролю';
-    }
+                        if (null === $userId) {
+                            throw new ClientAwareException(
+                                CategoryEnum::INVALID_ARGUMENT(),
+                                'Указано неверное имя пользователя или пароль'
+                            );
+                        }
+                    } catch (ValidationFailedException $e) {
+                        throw ClientAwareException::createFromValidationFailedException($e);
+                    }
 
-    public function getType(): Type
-    {
-        return $this->registry->string();
-    }
+                    $accessToken = $this->tokenManager->createToken($userId);
 
-    public function getArgs(): array
-    {
-        return [
-            'login' => [
-                'type' => $this->registry->string(),
-            ],
-            'password' => [
-                'type' => $this->registry->string(),
-            ],
-        ];
-    }
-
-    public function getResolve(): callable
-    {
-        return function () {
-            return '';
-        };
+                    return new $accessToken;
+                }
+            )
+            ->build();
     }
 }
