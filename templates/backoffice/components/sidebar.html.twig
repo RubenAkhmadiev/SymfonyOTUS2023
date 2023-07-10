@@ -1,3 +1,6 @@
+{% set limit = { limit: 20 } %}
+{% set page = { page: 0 } %}
+{% set defaultQuery = limit + page %}
 <div>
     <a href="{{ path('app_backoffice_dashboard') }}">
         <h3>Backoffice</h3>
@@ -8,13 +11,13 @@
             <a href="{{ path('app_backoffice_dashboard') }}">Главная</a>
         </li>
         <li>
-            <a href="{{ path('app_backoffice_orders_index') }}">Orders</a>
+            <a href="{{ path('app_backoffice_orders_index', defaultQuery) }}">Orders</a>
         </li>
         <li>
-            <a href="{{ path('app_backoffice_users_index') }}">Users</a>
+            <a href="{{ path('app_backoffice_users_index', defaultQuery) }}">Users</a>
         </li>
         <li>
-            <a href="{{ path('app_backoffice_partners_index') }}">Partners</a>
+            <a href="{{ path('app_backoffice_partners_index', defaultQuery) }}">Partners</a>
         </li>
     </ul>
 </div>
