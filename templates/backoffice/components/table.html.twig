@@ -15,4 +15,6 @@
         </tr>
         {% endfor %}
     </tbody>
+
+    {% include 'backoffice/components/pagination.html.twig' with {'prevPage': items.prevPage, 'page': items.page, 'nextPage': items.nextPage, 'limit': items.limit} only %}
 </table>
