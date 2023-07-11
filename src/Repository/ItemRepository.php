@@ -39,6 +39,18 @@ class ItemRepository extends ServiceEntityRepository
         }
     }
 
+    public function getItems(int $page, int $perPage): array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('i')
+            ->from($this->getClassName(), 'i')
+            ->orderBy('i.price', 'ASC')
+            ->setFirstResult($perPage * $page)
+            ->setMaxResults($perPage);
+
+        return $qb->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Item[] Returns an array of Item objects
 //     */

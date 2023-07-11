@@ -13,15 +13,18 @@ final class MutationType extends ObjectType
         // Общий список мутаций
         $mutations = [
             $container->get(Mutation\AuthenticateByPassword::class),
+            $container->get(Mutation\CreateUserProfile::class),
+            $container->get(Mutation\CreateUserProfileAddress::class),
+            $container->get(Mutation\CreateUser::class),
         ];
 
-        parent::__construct(
-            [
-                'fields' => static fn() => array_combine(
-                    array_map(static fn(Mutation\MutationInterface $m) => $m->getName(), $mutations),
-                    array_map(static fn(Mutation\MutationInterface $m) => $m->build(), $mutations)
-                ),
-            ]
+        $fields = array_combine(
+            array_map(static fn(Mutation\MutationInterface $m) => lcfirst((new \ReflectionClass($m))->getShortName()), $mutations),
+            array_map(static fn(Mutation\MutationInterface $m) => $m->build(), $mutations)
         );
+
+        ksort($fields);
+
+        parent::__construct(['fields' => $fields]);
     }
 }

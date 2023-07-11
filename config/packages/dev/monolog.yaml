@@ -1,0 +1,24 @@
+monolog:
+    use_microseconds: false
+    channels: [deprecation]
+    handlers:
+
+        grouped:
+            type: whatfailuregroup
+            members: [file]
+            channels:
+                - "!event"
+                - "!request"
+                - "!deprecation"
+        file:
+            type: rotating_file
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            level: debug
+            max_files: 1
+
+        deprecation:
+            type: rotating_file
+            path: '%kernel.logs_dir%/%kernel.environment%.deprecation.log'
+            level: debug
+            max_files: 1
+            channels: ["deprecation"]

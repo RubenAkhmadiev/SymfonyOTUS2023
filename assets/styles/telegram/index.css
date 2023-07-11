@@ -1,0 +1,123 @@
+.container {
+    background: gold;
+    max-width: 390px;
+    height: 773px;
+}
+
+.container .container-menu {
+    height: 100%;
+    box-shadow: 1px 1px 1px 1px black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.container .menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 33% 33% 33%;
+}
+
+.container .menu .item-menu {
+    text-align: center;
+    margin: 10px;
+}
+
+.container .menu .item-menu img {
+    width: 150px;
+}
+
+.container .menu .item-menu button {
+    background: seagreen;
+    border: none;
+    padding: 5px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px 1px black;
+}
+
+.container .menu .item-menu .remove-basket {
+    background: indianred;
+}
+
+.container .menu .item-menu button:hover {
+    box-shadow: 1px 1px 1px 2px black;
+    cursor: pointer;
+}
+
+.container .buttons {
+    margin-top: 3%;
+    align-content: center;
+}
+
+.container .button-item {
+    text-decoration: none;
+    background: seagreen;
+    border: none;
+    width: 100%;
+    padding: 5%;
+    box-shadow: 1px 1px 1px 1px black;
+}
+
+.container .buttons .button-item:hover {
+    cursor: pointer;
+    box-shadow: 1px 1px 1px 2px black;
+}
+
+.container .container-pay {
+    text-align: center;
+    padding: 3% 0;
+}
+
+.container .container-pay form {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 3%;
+}
+
+.container .container-pay .data-input {
+    margin: 3%;
+    display: grid;
+    grid-template-columns: 0.3fr 1fr;
+    grid-gap: 10px;
+}
+
+.container .container-pay .data-input input {
+    height: 23px;
+    border-radius: 10%;
+    border-color: black;
+}
+
+.container .container-pay #payButton {
+    margin-top: 3%;
+    cursor: pointer;
+    padding: 1%;
+}
+
+.container .buttons .buttons-control-page {
+    display: flex;
+}
+
+.container .buttons .buttons-control-page button {
+    background: #bedb33;
+}
+
+.container .container-successful {
+    padding: 20px;
+}
+
+.container .container-successful h2 {
+    text-align: center;
+    color: black;
+    font-size: 40px;
+}
+
+.container .bonus {
+    max-width: 300px;
+    align-content: center;
+    text-align: center;
+    margin-left: 25px;
+}
+
+.container .display-none {
+    display: none;
+}

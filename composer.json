@@ -3,16 +3,27 @@
     "license": "proprietary",
     "minimum-stability": "stable",
     "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://f40dbd1978380f5133987ea99221883f677d63f5@github.com/musicplatform/php-lib.git"
+        }
+    ],
     "require": {
         "php": "^8.1",
         "ext-ctype": "*",
+        "ext-curl": "*",
         "ext-iconv": "*",
         "doctrine/doctrine-bundle": "^2.9",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.15",
+        "longman/telegram-bot": "^0.80.0",
         "ecodev/graphql-upload": "*",
+        "musicplatform/php-lib": "^0.4.0",
         "nyholm/psr7": "*",
+        "predis/predis": "^2.2",
+        "psr/simple-cache": "^3.0",
         "sensio/framework-extra-bundle": "^6.2",
         "simpod/graphql-utils": "*",
         "symfony/asset": "5.4.*",
@@ -21,14 +32,18 @@
         "symfony/flex": "^1.17|^2",
         "symfony/framework-bundle": "5.4.*",
         "symfony/http-foundation": "5.4.*",
+        "symfony/messenger": "5.4.*",
+        "symfony/monolog-bundle": "^3.8",
         "symfony/psr-http-message-bridge": "*",
         "symfony/runtime": "5.4.*",
+        "symfony/security-bundle": "5.4.*",
         "symfony/twig-bundle": "5.4.*",
         "symfony/validator": "5.4.*",
         "symfony/webpack-encore-bundle": "^2.0",
         "symfony/yaml": "5.4.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
+        "webmozart/assert": "^1.11",
         "webonyx/graphql-php": "^15.5"
     },
     "config": {
