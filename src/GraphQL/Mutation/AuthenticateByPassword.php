@@ -33,7 +33,7 @@ class AuthenticateByPassword implements MutationInterface
 
                         if (null === $userId) {
                             throw new ClientAwareException(
-                                CategoryEnum::INVALID_ARGUMENT(),
+                                CategoryEnum::INVALID_ARGUMENT,
                                 'Указано неверное имя пользователя или пароль'
                             );
                         }

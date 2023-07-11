@@ -23,7 +23,7 @@ class ClientAwareException extends AppException implements ClientAware
 
     public function getCategory(): string
     {
-        return $this->category->getValue();
+        return $this->category->value;
     }
 
     public static function createFromValidationFailedException(ValidationFailedException $e): self
@@ -33,21 +33,21 @@ class ClientAwareException extends AppException implements ClientAware
             $message .= sprintf("\n%s: %s", $v->getPropertyPath(), $v->getMessage());
         }
 
-        return new self(CategoryEnum::INVALID_ARGUMENT(), $message, $e);
+        return new self(CategoryEnum::INVALID_ARGUMENT, $message, $e);
     }
 
     public static function createFromInvalidArgumentException(InvalidArgumentException $e): self
     {
-        return new self(CategoryEnum::INVALID_ARGUMENT(), $e->getMessage(), $e);
+        return new self(CategoryEnum::INVALID_ARGUMENT, $e->getMessage(), $e);
     }
 
     public static function createFromNotFoundException(NotFoundException $e): self
     {
-        return new self(CategoryEnum::NOT_FOUND(), $e->getMessage(), $e);
+        return new self(CategoryEnum::NOT_FOUND, $e->getMessage(), $e);
     }
 
     public static function createAccessDenied(): self
     {
-        return new self(CategoryEnum::ACCESS_DENIED());
+        return new self(CategoryEnum::ACCESS_DENIED);
     }
 }

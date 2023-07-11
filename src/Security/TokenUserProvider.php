@@ -2,7 +2,6 @@
 
 namespace App\Security;
 
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -26,7 +25,7 @@ class TokenUserProvider implements UserProviderInterface
 
     public function refreshUser(UserInterface $user): UserInterface
     {
-        throw new UnsupportedUserException();
+        return $user;
     }
 
     public function supportsClass(string $class): bool

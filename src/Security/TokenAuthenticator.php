@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
@@ -93,6 +93,10 @@ class TokenAuthenticator implements AuthenticationEntryPointInterface, Authentic
 
     public function createAuthenticatedToken(UserInterface $user, string $providerKey)
     {
-        // TODO: Implement createAuthenticatedToken() method.
+        return new PostAuthenticationGuardToken(
+            $user,
+            $providerKey,
+            $user->getRoles()
+        );
     }
 }
