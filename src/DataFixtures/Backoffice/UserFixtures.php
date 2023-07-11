@@ -12,6 +12,8 @@ class UserFixtures extends Fixture
     {
         for ($i = 0; $i < 20; $i++) {
             $user = new User();
+            $user->setEmail(sprintf('email_%s@site.com', $i));
+            $user->setPassword('password');
             $manager->persist($user);
         }
 
