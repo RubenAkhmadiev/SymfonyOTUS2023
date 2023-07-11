@@ -41,9 +41,7 @@ class AuthenticateByPassword implements MutationInterface
                         throw ClientAwareException::createFromValidationFailedException($e);
                     }
 
-                    $accessToken = $this->tokenManager->createToken($userId);
-
-                    return new $accessToken;
+                    return $this->tokenManager->createToken($userId);
                 }
             )
             ->build();

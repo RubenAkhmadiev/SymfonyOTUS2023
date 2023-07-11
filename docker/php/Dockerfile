@@ -1,5 +1,7 @@
 FROM php:8.1-fpm-alpine
 
+RUN apk add --update linux-headers
+
 # Install dev dependencies
 RUN apk update \
     && apk upgrade --available \
@@ -50,6 +52,19 @@ RUN pecl channel-update pecl.php.net \
     && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini \
     && echo "extension=event.so" > /usr/local/etc/php/conf.d/event.ini \
     && echo "extension=memcached.so" > /usr/local/etc/php/conf.d/memcached.ini
+
+ARG WITH_XDEBUG
+
+RUN if [ "$WITH_XDEBUG" == "1" ]; \
+    then \
+        apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+        && pecl install xdebug \
+        && docker-php-ext-enable xdebug \
+        && echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+        && echo "xdebug.log_level=0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+        && echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+        && apk del .build-deps; \
+    fi
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
