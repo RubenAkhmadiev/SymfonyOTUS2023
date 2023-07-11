@@ -2,7 +2,6 @@
 
 namespace App\ApiUser;
 
-use App\GraphQL\Type\Dto\CurrentUserProfileDto;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Security;
@@ -14,8 +13,7 @@ final class CurrentUser
     private ?string $userAgent;
     private ?string $accessToken;
     private bool $isAuthorized;
-
-    private CurrentUserProfileDto $profile;
+    private ?int $userId;
 
     /**
      * @throws Throwable
@@ -37,6 +35,7 @@ final class CurrentUser
             try {
                 $this->isAuthorized = true;
                 $this->accessToken = $user->getAccessToken();
+                $this->userId = $user->getUserId();
             } catch (UserNotFoundException) {
                 $this->initUnauthorized();
             }
@@ -47,7 +46,7 @@ final class CurrentUser
     {
         $this->isAuthorized = false;
         $this->accessToken = null;
-        $this->profile = CurrentUserProfileDto::createEmpty();
+        $this->userId = null;
     }
 
     public function isAuthorized(): bool
@@ -60,9 +59,9 @@ final class CurrentUser
         return $this->accessToken;
     }
 
-    public function getProfile(): CurrentUserProfileDto
+    public function getUserId(): ?int
     {
-        return $this->profile;
+        return $this->userId;
     }
 
     public function getUserAgent(): ?string
