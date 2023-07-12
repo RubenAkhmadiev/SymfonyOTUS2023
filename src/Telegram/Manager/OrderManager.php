@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Manager\Telegram;
+namespace App\Telegram\Manager;
 
 use App\Controller\Telegram\Dto\OrderPaymentDto;
 use App\Entity\Order;

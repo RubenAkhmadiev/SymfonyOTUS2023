@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Manager\Telegram;
+namespace App\Telegram\Manager;
 
 use App\Entity\User;
 use App\Entity\UserProfile;
