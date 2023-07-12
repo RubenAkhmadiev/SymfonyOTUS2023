@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f36be0446b62ef426b71d4fe5c29524a",
+    "content-hash": "b75ccca89ef2a9fa09abce179baaf05e",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2144,7 +2144,7 @@
             "version": "v0.4.0",
             "source": {
                 "type": "git",
-                "url": "https://f40dbd1978380f5133987ea99221883f677d63f5@github.com/musicplatform/php-lib.git",
+                "url": "https://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@github.com/musicplatform/php-lib.git",
                 "reference": "da3033464e34d6e79fce0419de75026d0dffe8d1"
             },
             "require": {
