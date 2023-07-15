@@ -10,15 +10,27 @@ services:
 
   app:
     container_name: 'php'
-    build: docker/php
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+      args:
+        WITH_XDEBUG: "1"
     volumes:
       - ./:/var/www/app
+    depends_on:
+      - redis
+      - database
     environment:
       APP_ENV: "dev"
       APP_DEBUG: "1"
       APP_SECRET: "95b54fb4f0a5924b1c7da95f513becb5"
       DATABASE_URL: "pgsql://app:app@database/app"
       TELEGRAM_TOKEN: ""
+      REDIS_HOST: "tcp://redis:6379"
+      XDEBUG_CONFIG: "client_host=host.docker.internal client_port=9003"
+      PHP_IDE_CONFIG: "serverName=symfony-app"
 
   database:
     image: postgres:15-alpine
@@ -31,5 +43,12 @@ services:
     volumes:
       - database_data:/var/lib/postgresql/data:rw
 
+  redis:
+    image: redis:latest
+    restart: always
+    volumes:
+      - redis:/data
+
 volumes:
   database_data:
+  redis:
