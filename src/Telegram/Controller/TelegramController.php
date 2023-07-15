@@ -38,10 +38,11 @@ class TelegramController extends AbstractController
     #[Route(path: '/telegram/pay', name: 'telegram_pay', methods: ['POST'])]
     public function orderPayment(Request $request): Response
     {
-        $orderDto = OrderPaymentDto::fromRequest($request);
-        $id = $this->customerAdapter->createOrder($orderDto);
+        $requestDto = OrderPaymentDto::fromRequest($request);
+        $user = $this->customerAdapter->createOrUpdateUser($requestDto);
+        $orderId = $this->customerAdapter->createOrder($user, $requestDto);
 
-        return new JsonResponse(['id' => $id], Response::HTTP_CREATED);
+        return new JsonResponse(['id' => $orderId], Response::HTTP_CREATED);
     }
 
     #[Route(path: '/telegram/user/orders/{id}', name: 'telegram_user_orders', methods: ['GET'])]

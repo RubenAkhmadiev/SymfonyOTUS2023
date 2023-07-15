@@ -5,6 +5,10 @@ controllers:
 backoffice_controllers:
     resource: ../../src/Backoffice/Controller/
     type: annotation
+    
+telegram_controllers:
+    resource: ../../src/Telegram/Controller/
+    type: annotation    
 
 kernel:
     resource: ../../src/Kernel.php

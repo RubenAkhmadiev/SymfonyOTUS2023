@@ -23,15 +23,24 @@ class CustomerAdapter
         return $this->itemService->getItems($page, $perPage);
     }
 
-    public function createOrUpdateUser(int $telegramId, string $firstName, string $secondName, string $phone, string $address): User
+    public function createOrUpdateUser(OrderPaymentDto $requestDto): User
     {
-        return $this->createOrUpdateUser($telegramId, $firstName, $secondName, $phone, $address);
+        return $this->userService->createOrUpdateUser(
+                $requestDto->telegramId,
+                $requestDto->email,
+                $requestDto->name,
+                $requestDto->sername,
+                $requestDto->phone,
+                $requestDto->city,
+                $requestDto->street,
+                $requestDto->building
+        );
     }
 
 
-    public function createOrder(OrderPaymentDto $orderPaymentDto): ?int
+    public function createOrder(User $user, OrderPaymentDto $orderPaymentDto): ?int
     {
-        return $this->orderService->createOrder($orderPaymentDto);
+        return $this->orderService->createOrder($user, $orderPaymentDto);
     }
 
     public function userOrders(int $userId): ?array

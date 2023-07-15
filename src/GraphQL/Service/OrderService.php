@@ -11,22 +11,13 @@ use DateTime;
 class OrderService
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly UserService $userService,
+        private readonly EntityManagerInterface $entityManager
     ) {
     }
 
-    public function createOrder(OrderPaymentDto $orderPaymentDto): ?int
+    public function createOrder(User $user, OrderPaymentDto $orderPaymentDto): ?int
     {
         $conn = $this->entityManager->getConnection();
-
-        $user = $this->userService->createOrUpdateUser(
-            $orderPaymentDto->telegramId,
-            $orderPaymentDto->name,
-            $orderPaymentDto->sername,
-            $orderPaymentDto->phone,
-            $orderPaymentDto->address
-        );
 
         $order = new Order();
         $order->setUserId($user);
