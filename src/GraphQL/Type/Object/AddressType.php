@@ -15,11 +15,13 @@ class AddressType extends ObjectType
     ) {
         $config = TypeConfig::create()->withFields(
 
-            Field::create('city', $this->registry->string()),
+            Field::create('id', $this->registry->int()),
 
-            Field::create('street', $this->registry->string()),
+            Field::create('city', $this->registry->nullableString()),
 
-            Field::create('building', $this->registry->string()),
+            Field::create('street', $this->registry->nullableString()),
+
+            Field::create('building', $this->registry->nullableString()),
         );
 
         parent::__construct($config->build());

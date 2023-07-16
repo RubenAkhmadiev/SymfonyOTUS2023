@@ -2,6 +2,8 @@
 
 namespace App\ApiUser;
 
+use App\Entity\Address;
+use App\GraphQL\Type\Dto\AddressDto;
 use App\GraphQL\Type\Dto\UserProfileDto;
 use App\Repository\UserProfileRepository;
 use DateTime;
@@ -69,7 +71,16 @@ final class CurrentUser
                 secondName: $profile->getSecondName(),
                 phone: $profile->getPhone(),
                 birthday: $profile->getBirthDay()->format('Y-m-d'),
-                addresses: $profile->getAddresses(),
+                addresses: array_map(
+                    static fn (Address $address): AddressDto =>
+                    new AddressDto(
+                        id: $address->getId(),
+                        city: $address->getCity(),
+                        street: $address->getStreet(),
+                        building: $address->getBuilding()
+                    ),
+                    $profile->getAddresses()->toArray()
+                )
             );
         }
     }

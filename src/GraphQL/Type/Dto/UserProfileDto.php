@@ -2,9 +2,6 @@
 
 namespace App\GraphQL\Type\Dto;
 
-use DateTime;
-use Doctrine\Common\Collections\Collection;
-
 final class UserProfileDto implements TypeDtoInterface
 {
     public function __construct(
@@ -13,7 +10,7 @@ final class UserProfileDto implements TypeDtoInterface
         public ?string $secondName = null,
         public ?string $phone = null,
         public ?string $birthday = null,
-        public ?Collection $addresses = null,
+        public ?array $addresses = null,
     ) {
     }
 
