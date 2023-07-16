@@ -2,9 +2,11 @@
 
 namespace App\Backoffice\Entity;
 
+use App\Backoffice\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ORM\Table(name: '`product`', schema: 'backoffice')]
 class Product
 {
     #[ORM\Id]
