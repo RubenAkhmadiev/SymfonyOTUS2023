@@ -4,7 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    
+
     env(TELEGRAM_TOKEN): ''
     env(REDIS_HOST): ''
 
@@ -16,7 +16,7 @@ services:
 
         bind:
             Psr\SimpleCache\CacheInterface: '@Symfony\Component\Cache\Psr16Cache'
-    
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -32,7 +32,7 @@ services:
             - '../src/GraphQL/UseCase/**/Query.php'
             - '../src/GraphQL/UseCase/**/Command.php'
             - '../src/GraphQL/Context.php'
-    
+
     App\Controller\:
         resource: '../src/Controller/'
         tags: [ 'controller.service_arguments' ]
@@ -40,7 +40,7 @@ services:
     App\Backoffice\:
         resource: '../src/Backoffice/'
         exclude:
-            - '../src/Backoffice/Entity/'      
+            - '../src/Backoffice/Entity/'
 
     App\Customer\:
         resource: '../src/Customer/'
@@ -51,11 +51,11 @@ services:
         resource: '../src/IntegrationAPI/'
         exclude:
             - '../src/IntegrationAPI/Entity/'
-            
+
     App\Command\Telegram\TelegramGenerateButtonsCommand:
-        arguments: 
+        arguments:
             - '%env(TELEGRAM_TOKEN)%'
-    
+
     App\GraphQL\:
         resource: '../src/GraphQL'
         public: true
@@ -69,9 +69,8 @@ services:
             - '../src/GraphQL/UseCase/'
             - '../src/GraphQL/Helper/'
             - '../src/GraphQL/Helper/'
-            
+
     # Redis
-                
     Predis\Client:
         arguments:
             - '%env(REDIS_HOST)%'
@@ -89,5 +88,10 @@ services:
 
     App\Http\RequestResolver\RequestDtoResolver:
         tags:
-            -   name: controller.argument_value_resolver
-                priority: 50
+            - name: controller.argument_value_resolver
+              priority: 50
+
+    doctrineMigrationDiffListener:
+        class: App\EventSubscriber\Doctrine\MigrationEventSubscriber
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
