@@ -3,6 +3,8 @@
 namespace App\Backoffice\Entity;
 
 use App\Backoffice\Repository\CategoryRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
@@ -16,6 +18,14 @@ class Category
 
     #[ORM\Column(length: 255)]
     private string $name;
+
+    #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'categories')]
+    public Collection $products;
+
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+    }
 
     public function getId(): int
     {
@@ -32,5 +42,13 @@ class Category
         $this->name = $name;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
     }
 }
