@@ -24,9 +24,6 @@ class User implements UserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
-    private \DateTimeInterface $creation_date;
-
     #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
     private ?UserProfile $profile = null;
 
@@ -89,16 +86,6 @@ class User implements UserInterface
         $this->password = $password;
 
         return $this;
-    }
-
-    public function getCreationDate(): \DateTimeInterface
-    {
-        return $this->creation_date;
-    }
-
-    public function setCreationDate(\DateTimeInterface $creationDate): void
-    {
-        $this->creation_date = $creationDate;
     }
 
     /**

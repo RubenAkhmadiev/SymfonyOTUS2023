@@ -21,9 +21,8 @@ final class Version20230715134136 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SEQUENCE "user_telegram_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE TABLE "user_telegram" (id INT NOT NULL, user_id INT NOT NULL, telegram_id INT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('ALTER TABLE "user" DROP telegram_id');
-        $this->addSql('ALTER TABLE user_telegram ADD id INT NOT NULL');
-        $this->addSql('ALTER TABLE user_telegram ADD PRIMARY KEY (id)');
     }
 
     public function down(Schema $schema): void
@@ -31,8 +30,7 @@ final class Version20230715134136 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SCHEMA public');
         $this->addSql('DROP SEQUENCE "user_telegram_id_seq" CASCADE');
-        $this->addSql('ALTER TABLE "user_telegram" DROP CONSTRAINT "user_telegram_pkey"');
-        $this->addSql('ALTER TABLE "user_telegram" DROP id');
+        $this->addSql('DROP TABLE "user_telegram"');
         $this->addSql('ALTER TABLE "user" ADD telegram_id INT NOT NULL');
     }
 }

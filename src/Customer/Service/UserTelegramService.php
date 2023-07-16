@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Service;
+namespace App\Customer\Service;
 
 use App\Entity\UserTelegram;
 use Doctrine\ORM\EntityManagerInterface;

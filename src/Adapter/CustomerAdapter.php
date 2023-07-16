@@ -2,11 +2,13 @@
 
 namespace App\Adapter;
 
+use App\Adapter\Dto\UserDto;
 use App\Controller\Telegram\Dto\OrderPaymentDto;
-use App\Entity\User;
-use App\GraphQL\Service\ItemService;
-use App\GraphQL\Service\OrderService;
-use App\GraphQL\Service\UserService;
+use App\Customer\Service\AddressService;
+use App\Customer\Service\UserProfileService;
+use App\Customer\Service\ItemService;
+use App\Customer\Service\OrderService;
+use App\Customer\Service\UserService;
 
 class CustomerAdapter
 {
@@ -14,6 +16,8 @@ class CustomerAdapter
         protected ItemService $itemService,
         protected OrderService $orderService,
         protected UserService $userService,
+        protected UserProfileService $userProfileService,
+        protected AddressService $addressService,
     ) {
     }
 
@@ -23,22 +27,13 @@ class CustomerAdapter
         return $this->itemService->getItems($page, $perPage);
     }
 
-    public function createOrUpdateUser(OrderPaymentDto $requestDto): User
+    public function checkExistsUser(?int $telegramId): ?int
     {
-        return $this->userService->createOrUpdateUser(
-                $requestDto->telegramId,
-                $requestDto->email,
-                $requestDto->name,
-                $requestDto->sername,
-                $requestDto->phone,
-                $requestDto->city,
-                $requestDto->street,
-                $requestDto->building
-        );
+        return $this->userService->checkExistsUser($telegramId);
     }
 
 
-    public function createOrder(User $user, OrderPaymentDto $orderPaymentDto): ?int
+    public function createOrder(UserDto $user, OrderPaymentDto $orderPaymentDto): ?int
     {
         return $this->orderService->createOrder($user, $orderPaymentDto);
     }
@@ -46,5 +41,47 @@ class CustomerAdapter
     public function userOrders(int $userId): ?array
     {
         return $this->orderService->userOrders($userId);
+    }
+
+    public function createUser(OrderPaymentDto $requestDto): ?UserDto
+    {
+        $user = $this->userService->createUser($requestDto->email);
+
+        $userProfile = $this->userProfileService->createUserProfile(
+            $user,
+            $requestDto->name,
+            $requestDto->sername,
+            $requestDto->phone,
+        );
+
+        $this->addressService->createAddress(
+            $userProfile->getId(),
+            $requestDto->city,
+            $requestDto->street,
+            $requestDto->building,
+        );
+
+        return UserDto::fromEntity($user);
+    }
+
+    public function updateUser(?int $userId, OrderPaymentDto $requestDto): ?UserDto
+    {
+        $user = $this->userService->updateUser($userId, $requestDto->email);
+
+        $userProfile = $this->userProfileService->updateUserProfile(
+            $user->getId(),
+            $requestDto->name,
+            $requestDto->sername,
+            $requestDto->phone,
+        );
+
+        $this->addressService->updateAddress(
+            $userProfile->getId(),
+            $requestDto->city,
+            $requestDto->street,
+            $requestDto->building,
+        );
+
+        return UserDto::fromEntity($user);
     }
 }

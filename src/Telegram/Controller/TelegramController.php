@@ -35,15 +35,25 @@ class TelegramController extends AbstractController
         return new JsonResponse($items, Response::HTTP_OK);
     }
 
+
     #[Route(path: '/telegram/pay', name: 'telegram_pay', methods: ['POST'])]
     public function orderPayment(Request $request): Response
     {
         $requestDto = OrderPaymentDto::fromRequest($request);
-        $user = $this->customerAdapter->createOrUpdateUser($requestDto);
+
+        $userId = $this->customerAdapter->checkExistsUser($requestDto->telegramId);
+
+        if ($userId) {
+            $user = $this->customerAdapter->updateUser($userId, $requestDto);
+        } else {
+            $user = $this->customerAdapter->createUser($requestDto);
+        }
+
         $orderId = $this->customerAdapter->createOrder($user, $requestDto);
 
         return new JsonResponse(['id' => $orderId], Response::HTTP_CREATED);
     }
+
 
     #[Route(path: '/telegram/user/orders/{id}', name: 'telegram_user_orders', methods: ['GET'])]
     public function getUserOrders(int $id): Response

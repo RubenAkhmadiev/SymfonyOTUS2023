@@ -1,7 +1,8 @@
 <?php
 
-namespace App\GraphQL\Service;
+namespace App\Customer\Service;
 
+use App\Adapter\Dto\UserDto;
 use App\Controller\Telegram\Dto\OrderPaymentDto;
 use App\Entity\Order;
 use App\Entity\User;
@@ -11,13 +12,15 @@ use DateTime;
 class OrderService
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
+        private readonly UserService $userService
     ) {
     }
 
-    public function createOrder(User $user, OrderPaymentDto $orderPaymentDto): ?int
+    public function createOrder(UserDto $user, OrderPaymentDto $orderPaymentDto): ?int
     {
         $conn = $this->entityManager->getConnection();
+        $user = $this->userService->getUser($user->id);
 
         $order = new Order();
         $order->setUserId($user);
