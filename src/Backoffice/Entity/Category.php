@@ -6,7 +6,7 @@ use App\Backoffice\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
-#[ORM\Table(name: '`category`')]
+#[ORM\Table(name: '`category`', schema: 'backoffice')]
 class Category
 {
     #[ORM\Id]
