@@ -3,16 +3,16 @@
 namespace App\GraphQL\Mutation;
 
 use App\ApiUser\CurrentUser;
-use App\Entity\Address;
 use App\GraphQL\Error\ClientAwareException;
 use App\GraphQL\SchemaBuilder\Argument;
 use App\GraphQL\SchemaBuilder\Mutation;
 use App\GraphQL\TypeRegistry;
 use App\Repository\UserRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
-class CreateUserProfileAddress implements MutationInterface
+class UpdateUserProfile implements MutationInterface
 {
     public function __construct(
         private TypeRegistry $registry,
@@ -25,11 +25,12 @@ class CreateUserProfileAddress implements MutationInterface
     public function build(): array
     {
         return Mutation::create($this->registry->bigInt())
-            ->withDescription('Создание адреса пользователя')
+            ->withDescription('Обновление профиля пользователя')
             ->withArguments(
-                Argument::create('city', $this->registry->string())->withDescription('Город'),
-                Argument::create('street', $this->registry->string())->withDescription('Улица'),
-                Argument::create('building', $this->registry->string())->withDescription('Дом'),
+                Argument::create('firstName', $this->registry->string())->withDescription('Имя пользователя'),
+                Argument::create('secondName', $this->registry->string())->withDescription('Фамилия пользователя'),
+                Argument::create('phone', $this->registry->string())->withDescription('Телефон пользователя'),
+                Argument::create('birthday', $this->registry->string())->withDescription('День рождения пользователя'),
             )
             ->withResolver(
                 function (mixed $root, array $args): int {
@@ -44,19 +45,19 @@ class CreateUserProfileAddress implements MutationInterface
                     }
 
                     if ($user->getProfile() === null) {
-                        throw new UserNotFoundException('Профиль пользователя не найден');
+                        throw new UserNotFoundException('Профиль пользователя не существует');
                     }
 
-                    $address = new Address();
-                    $address->setCity($args['city']);
-                    $address->setStreet($args['street']);
-                    $address->setBuilding($args['building']);
-                    $address->setProfile($user->getProfile());
+                    $userProfile = $user->getProfile();
+                    $userProfile->setFirstName($args['firstName']);
+                    $userProfile->setSecondName($args['secondName']);
+                    $userProfile->setPhone($args['phone']);
+                    $userProfile->setBirthDay(DateTime::createFromFormat("Y-m-d", $args['birthday']));
 
-                    $this->entityManager->persist($address);
+                    $this->entityManager->persist($userProfile);
                     $this->entityManager->flush();
 
-                    return $address->getId();
+                    return $userProfile->getId();
                 }
             )
             ->build();

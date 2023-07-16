@@ -3,13 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,14 +20,20 @@ class User
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
+    private \DateTimeInterface $creation_date;
+
     #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
     private ?UserProfile $profile = null;
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->creation_date = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -83,6 +90,16 @@ class User
         return $this;
     }
 
+    public function getCreationDate(): \DateTimeInterface
+    {
+        return $this->creation_date;
+    }
+
+    public function setCreationDate(\DateTimeInterface $creationDate): void
+    {
+        $this->creation_date = $creationDate;
+    }
+
     /**
      * Returning a salt is only needed, if you are not using a modern
      * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
@@ -113,5 +130,10 @@ class User
         $this->profile = $profile;
 
         return $this;
+    }
+
+    public function getRoles()
+    {
+        return ['ROLE_USER'];
     }
 }

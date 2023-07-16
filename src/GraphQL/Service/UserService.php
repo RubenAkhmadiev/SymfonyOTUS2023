@@ -8,11 +8,13 @@ use App\Entity\UserProfile;
 use App\Entity\UserTelegram;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserService
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly UserTelegramService $userTelegramService
     ) {
     }

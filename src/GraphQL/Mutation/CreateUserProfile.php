@@ -11,6 +11,7 @@ use App\GraphQL\TypeRegistry;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
 class CreateUserProfile implements MutationInterface
@@ -46,7 +47,7 @@ class CreateUserProfile implements MutationInterface
                     }
 
                     if ($user->getProfile() instanceof UserProfile) {
-                        throw new \Exception('Профиль уже существует');
+                        throw new Exception('Профиль уже существует');
                     }
 
                     $userProfile = new UserProfile();
