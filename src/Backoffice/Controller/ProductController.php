@@ -2,57 +2,54 @@
 
 namespace App\Backoffice\Controller;
 
-use App\Backoffice\Entity\Partner;
-use App\Backoffice\Service\PartnerService;
-use App\Backoffice\RequestDto\Partner\{IndexRequestDto};
+use App\Backoffice\Entity\Product;
+use App\Backoffice\RequestDto\Product\IndexRequestDto;
+use App\Backoffice\Service\ProductService;
 use App\Backoffice\View\Table;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-class PartnerController extends AbstractController
+class ProductController extends AbstractController
 {
     use ValidateTrait;
 
     public function __construct(
         EntityManagerInterface   $em,
         ValidatorInterface       $validator,
-        protected PartnerService $partnerService,
+        protected ProductService $productService,
     ) {
         $this->setValidator($validator);
     }
 
     #[Route(
-        path: '/admin/partners',
-        name: 'app_backoffice_partners_index',
+        path: '/admin/products',
+        name: 'app_backoffice_products_index',
         methods: ['GET']
     )]
-    //#[IsGranted('ROLE_ADMIN')]
     public function index(Request $request): Response
     {
         /** @var IndexRequestDto $dto */
         $dto = $this->validate($request, IndexRequestDto::class);
 
-        $result = $this->partnerService->getAll(
+        $result = $this->productService->getAll(
             limit: $dto->limit,
             page: $dto->page,
         );
 
-        $body = array_map(static fn(Partner $partner) => [
-            'id'   => $partner->getId(),
-            'name' => $partner->getName(),
-            'type' => $partner->getType()->getName(),
+        $body = array_map(static fn(Product $product) => [
+            'id'    => $product->getId(),
+            'title' => $product->getTitle(),
         ], $result['items']);
 
-        return $this->render('backoffice/pages/partners/index.html.twig', [
-            'partners' => (new Table())
+        return $this->render('backoffice/pages/products/index.html.twig', [
+            'products' => (new Table())
                 ->setHeader('ID')
                 ->setHeader('Название')
-                ->setHeader('Тип')
                 ->setData($body)
                 ->setPage($dto->page, $result['has_more'], $dto->limit)
         ]);
