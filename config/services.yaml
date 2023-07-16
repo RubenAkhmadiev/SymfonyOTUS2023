@@ -87,7 +87,7 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    MusicPlatform\PhpLib\Http\RequestResolver\RequestDtoResolver:
+    App\Http\RequestResolver\RequestDtoResolver:
         tags:
             -   name: controller.argument_value_resolver
                 priority: 50
