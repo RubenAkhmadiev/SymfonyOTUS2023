@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f36be0446b62ef426b71d4fe5c29524a",
+    "content-hash": "c6b7dbd94c1705ff3e6717630db2a294",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2138,34 +2138,6 @@
                 }
             ],
             "time": "2023-02-06T13:44:46+00:00"
-        },
-        {
-            "name": "musicplatform/php-lib",
-            "version": "v0.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://f40dbd1978380f5133987ea99221883f677d63f5@github.com/musicplatform/php-lib.git",
-                "reference": "da3033464e34d6e79fce0419de75026d0dffe8d1"
-            },
-            "require": {
-                "php": ">=7.4",
-                "symfony/console": "^4.3 || ^5.2",
-                "symfony/http-kernel": "^4.3 || ^5.2",
-                "symfony/validator": "^4.3 || ^5.2"
-            },
-            "require-dev": {
-                "roave/security-advisories": "dev-master"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "MusicPlatform\\PhpLib\\": "src/"
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "time": "2022-12-27T12:20:53+00:00"
         },
         {
             "name": "nyholm/psr7",
