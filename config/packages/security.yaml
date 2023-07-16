@@ -1,4 +1,5 @@
 security:
+    enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         App\Entity\User: 'auto'
@@ -7,13 +8,24 @@ security:
     providers:
         access_token:
             id: App\Security\TokenUserProvider
+        backoffice_provider:
+            entity:
+                class: App\Backoffice\Entity\User
+                property: email
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        backoffice:
+            pattern: ^/admin/*
+            provider: backoffice_provider
+            custom_authenticator: App\Security\BackofficeAuthenticator
+            logout:
+                path: app_backoffice_logout
+                target: app_backoffice_dashboard
         api:
             pattern: ^/
-            anonymous: ~
             lazy: true
             provider: access_token
             entry_point: App\Security\TokenAuthenticator
@@ -24,7 +36,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+         - { path: ^/admin/login$, role: PUBLIC_ACCESS }
+         - { path: ^/admin, roles: ROLE_USER }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

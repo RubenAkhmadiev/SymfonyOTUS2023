@@ -1,23 +1,35 @@
 {% set limit = { limit: 20 } %}
 {% set page = { page: 0 } %}
 {% set defaultQuery = limit + page %}
-<div>
-    <a href="{{ path('app_backoffice_dashboard') }}">
-        <h3>Backoffice</h3>
-    </a>
+<div class="d-flex flex-column">
+    <div>
+        <a href="{{ path('app_backoffice_dashboard') }}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+            <h3 class="text-center m-2">Backoffice</h3>
+        </a>
+    </div>
 
-    <ul>
-        <li>
-            <a href="{{ path('app_backoffice_dashboard') }}">Главная</a>
-        </li>
-        <li>
-            <a href="{{ path('app_backoffice_orders_index', defaultQuery) }}">Orders</a>
-        </li>
-        <li>
-            <a href="{{ path('app_backoffice_users_index', defaultQuery) }}">Users</a>
-        </li>
-        <li>
-            <a href="{{ path('app_backoffice_partners_index', defaultQuery) }}">Partners</a>
-        </li>
-    </ul>
+    <hr class="border border-secondary border-1 opacity-50">
+
+    <div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item list-group-item-action list-group-item-dark">
+                <a href="{{ path('app_backoffice_dashboard') }}">Главная</a>
+            </li>
+            <li class="list-group-item list-group-item-action list-group-item-dark">
+                <a href="{{ path('app_backoffice_orders_index', defaultQuery) }}">Orders</a>
+            </li>
+            <li class="list-group-item list-group-item-action list-group-item-dark">
+                <a href="{{ path('app_backoffice_users_index', defaultQuery) }}">Users</a>
+            </li>
+            <li class="list-group-item list-group-item-action list-group-item-dark">
+                <a href="{{ path('app_backoffice_partners_index', defaultQuery) }}">Partners</a>
+            </li>
+        </ul>
+    </div>
+
+    <hr class="border border-secondary border-1 opacity-50">
+
+    <div>
+        <p class="text-center">{{ app.user.userIdentifier }} | <a href="{{ path('app_backoffice_logout') }}">Выйти</a></p>
+    </div>
 </div>

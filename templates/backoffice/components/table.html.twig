@@ -1,20 +1,28 @@
-<table>
-    <thead>
-        <tr>
-            {% for th in items.header %}
-            <th>{{ th.title }}</th>
+<div class="p-2">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                {% for th in items.header %}
+                <th scope="col">{{ th.title }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in items.items %}
+            <tr>
+                {% for td in row %}
+                    {% if loop.index0 == 0 %}
+                    <th scope="row">{{ td }}</th>
+                    {% else %}
+                    <td>{{ td }}</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
             {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for row in items.items %}
-        <tr>
-            {% for td in row %}
-            <td>{{ td }}</td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </tbody>
+        </tbody>
+    </table>
 
-    {% include 'backoffice/components/pagination.html.twig' with {'prevPage': items.prevPage, 'page': items.page, 'nextPage': items.nextPage, 'limit': items.limit} only %}
-</table>
+    <div>
+        {% include 'backoffice/components/pagination.html.twig' with {'prevPage': items.prevPage, 'page': items.page, 'nextPage': items.nextPage, 'limit': items.limit} only %}
+    </div>
+</div>
