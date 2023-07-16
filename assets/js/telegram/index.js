@@ -141,7 +141,9 @@ let finishOrder = function() {
     formDataRequest.append('sername', formData.get("sername"));
     formDataRequest.append('phone', formData.get("phone"));
     formDataRequest.append('email', formData.get("email"));
-    formDataRequest.append('address', formData.get("address"));
+    formDataRequest.append('city', formData.get("city"));
+    formDataRequest.append('street', formData.get("street"));
+    formDataRequest.append('building', formData.get("building"));
     formDataRequest.append('item_ids', productIds.toString());
     formDataRequest.append('sum', sumProduct);
     if (telegram.initDataUnsafe.user) {

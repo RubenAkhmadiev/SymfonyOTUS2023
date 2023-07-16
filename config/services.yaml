@@ -68,6 +68,7 @@ services:
             - '../src/GraphQL/Security/'
             - '../src/GraphQL/UseCase/'
             - '../src/GraphQL/Helper/'
+            - '../src/GraphQL/Helper/'
             
     # Redis
                 

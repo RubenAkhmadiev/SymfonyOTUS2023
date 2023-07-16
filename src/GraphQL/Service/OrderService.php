@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Manager\Telegram;
+namespace App\GraphQL\Service;
 
 use App\Controller\Telegram\Dto\OrderPaymentDto;
 use App\Entity\Order;
@@ -8,29 +8,20 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use DateTime;
 
-class OrderManager
+class OrderService
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly UserManager $userManager,
+        private readonly EntityManagerInterface $entityManager
     ) {
     }
 
-    public function createOrder(OrderPaymentDto $orderPaymentDto): ?int
+    public function createOrder(User $user, OrderPaymentDto $orderPaymentDto): ?int
     {
         $conn = $this->entityManager->getConnection();
 
-        $user = $this->userManager->createOrUpdateUser(
-            $orderPaymentDto->telegramId,
-            $orderPaymentDto->name,
-            $orderPaymentDto->sername,
-            $orderPaymentDto->phone,
-            $orderPaymentDto->address
-        );
-
         $order = new Order();
         $order->setUserId($user);
-        $order->setNumber(213);
+        $order->setNumber(random_int(10, 100));
         $order->setSum($orderPaymentDto->sum);
         $order->setCreationDate(new DateTime());
         $this->entityManager->persist($order);

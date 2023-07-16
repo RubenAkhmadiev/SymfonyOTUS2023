@@ -8,7 +8,7 @@ use App\GraphQL\Type\Object\User\UserProfileType;
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;
 
-class AddressType extends ObjectType
+class PartnerType extends ObjectType
 {
     public function __construct(
         private TypeRegistry $registry,
@@ -17,11 +17,9 @@ class AddressType extends ObjectType
 
             Field::create('id', $this->registry->int()),
 
-            Field::create('city', $this->registry->nullableString()),
+            Field::create('name', $this->registry->nullableString()),
 
-            Field::create('street', $this->registry->nullableString()),
-
-            Field::create('building', $this->registry->nullableString()),
+            Field::create('type', $this->registry->nullableString()),
         );
 
         parent::__construct($config->build());

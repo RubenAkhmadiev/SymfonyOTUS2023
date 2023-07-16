@@ -2,6 +2,11 @@
 
 namespace App\ApiUser;
 
+use App\Entity\Address;
+use App\GraphQL\Type\Dto\AddressDto;
+use App\GraphQL\Type\Dto\UserProfileDto;
+use App\Repository\UserProfileRepository;
+use DateTime;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Security;
@@ -14,6 +19,7 @@ final class CurrentUser
     private ?string $accessToken;
     private bool $isAuthorized;
     private ?int $userId;
+    private UserProfileDto $profile;
 
     /**
      * @throws Throwable
@@ -21,6 +27,7 @@ final class CurrentUser
     public function __construct(
         RequestStack $requestStack,
         Security $security,
+        private readonly UserProfileRepository $userProfileRepository,
     ) {
         $request = $requestStack->getCurrentRequest();
         Assert::notNull($request);
@@ -36,6 +43,7 @@ final class CurrentUser
                 $this->isAuthorized = true;
                 $this->accessToken = $user->getAccessToken();
                 $this->userId = $user->getUserId();
+                $this->initProfile($user->getUserId());
             } catch (UserNotFoundException) {
                 $this->initUnauthorized();
             }
@@ -47,6 +55,34 @@ final class CurrentUser
         $this->isAuthorized = false;
         $this->accessToken = null;
         $this->userId = null;
+        $this->profile = UserProfileDto::createEmpty();
+    }
+
+    private function initProfile(int $userId): void
+    {
+        $profile = $this->userProfileRepository->findOneByUserId($userId);
+
+        if ($profile === null) {
+            $this->profile = UserProfileDto::createEmpty();
+        } else {
+            $this->profile = new UserProfileDto(
+                id: $profile->getId(),
+                firstName: $profile->getFirstName(),
+                secondName: $profile->getSecondName(),
+                phone: $profile->getPhone(),
+                birthday: $profile->getBirthDay()->format('Y-m-d'),
+                addresses: array_map(
+                    static fn (Address $address): AddressDto =>
+                    new AddressDto(
+                        id: $address->getId(),
+                        city: $address->getCity(),
+                        street: $address->getStreet(),
+                        building: $address->getBuilding()
+                    ),
+                    $profile->getAddresses()->toArray()
+                )
+            );
+        }
     }
 
     public function isAuthorized(): bool
@@ -62,6 +98,11 @@ final class CurrentUser
     public function getUserId(): ?int
     {
         return $this->userId;
+    }
+
+    public function getProfile(): UserProfileDto
+    {
+        return $this->profile;
     }
 
     public function getUserAgent(): ?string

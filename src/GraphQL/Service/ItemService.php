@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Manager\Telegram;
+namespace App\GraphQL\Service;
 
 use App\Entity\Item;
 use App\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ItemManager
+class ItemService
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,

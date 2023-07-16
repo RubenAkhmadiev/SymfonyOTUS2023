@@ -3,33 +3,38 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+#[ORM\HasLifecycleCallbacks]
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private int $telegram_id;
-
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\Column(name: 'creation_date', type: Types::DATETIME_MUTABLE)]
+    private \DateTimeInterface $creation_date;
+
     #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
     private ?UserProfile $profile = null;
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->creation_date = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -66,18 +71,6 @@ class User
         return $this->email;
     }
 
-    public function getTelegramId(): int
-    {
-        return $this->telegram_id;
-    }
-
-    public function setTelegramId(int $telegramId): static
-    {
-        $this->telegram_id = $telegramId;
-
-        return $this;
-    }
-
     public function getLogin(): string
     {
         return (string) $this->email;
@@ -96,6 +89,16 @@ class User
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getCreationDate(): \DateTimeInterface
+    {
+        return $this->creation_date;
+    }
+
+    public function setCreationDate(\DateTimeInterface $creationDate): void
+    {
+        $this->creation_date = $creationDate;
     }
 
     /**
@@ -128,5 +131,10 @@ class User
         $this->profile = $profile;
 
         return $this;
+    }
+
+    public function getRoles()
+    {
+        return ['ROLE_USER'];
     }
 }

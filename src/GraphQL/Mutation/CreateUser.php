@@ -38,6 +38,7 @@ class CreateUser implements MutationInterface
                         $args['password']
                     );
                     $user->setPassword($hashedPassword);
+                    $user->setCreationDate(new DateTime());
 
                     $this->entityManager->persist($user);
                     $this->entityManager->flush();
