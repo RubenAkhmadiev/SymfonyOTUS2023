@@ -12,11 +12,11 @@ class PartnerFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create();
+        $faker = Factory::create(locale: 'ru_RU');
 
         for ($i = 0; $i < 20; $i++) {
             $partner = new Partner();
-            $partner->setName($faker->name);
+            $partner->setName($faker->company);
             $partner->setType(PartnerTypeEnum::RESTAURANT);
             $manager->persist($partner);
         }
