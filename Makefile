@@ -8,6 +8,8 @@ down:
 	docker-compose down
 exec:
 	docker-compose exec -it ${CONTAINER_NAME} sh
+install:
+	docker-compose exec -it ${CONTAINER_NAME} composer install
 fixtures:
 	docker-compose exec -it ${CONTAINER_NAME} php bin/console doctrine:fixtures:load --purge-with-truncate
 diff:
