@@ -38,8 +38,6 @@ services:
       POSTGRES_DB: "app"
       POSTGRES_PASSWORD: "app"
       POSTGRES_USER: "app"
-    ports:
-      - "5439:5432"  
     volumes:
       - database_data:/var/lib/postgresql/data:rw
 
