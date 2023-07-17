@@ -3,9 +3,9 @@
 namespace App\Customer\Service;
 
 use App\Adapter\Dto\UserDto;
-use App\Controller\Telegram\Dto\OrderPaymentDto;
 use App\Entity\Order;
 use App\Entity\User;
+use App\Telegram\Controller\Dto\OrderPaymentDto;
 use Doctrine\ORM\EntityManagerInterface;
 use DateTime;
 

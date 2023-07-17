@@ -3,8 +3,7 @@
 namespace App\Telegram\Controller;
 
 use App\Adapter\CustomerAdapter;
-use App\Backoffice\View\Table;
-use App\Controller\Telegram\Dto\OrderPaymentDto;
+use App\Telegram\Controller\Dto\OrderPaymentDto;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

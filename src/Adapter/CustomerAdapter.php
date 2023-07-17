@@ -3,12 +3,13 @@
 namespace App\Adapter;
 
 use App\Adapter\Dto\UserDto;
-use App\Controller\Telegram\Dto\OrderPaymentDto;
+
 use App\Customer\Service\AddressService;
 use App\Customer\Service\UserProfileService;
 use App\Customer\Service\ItemService;
 use App\Customer\Service\OrderService;
 use App\Customer\Service\UserService;
+use App\Telegram\Controller\Dto\OrderPaymentDto;
 
 class CustomerAdapter
 {

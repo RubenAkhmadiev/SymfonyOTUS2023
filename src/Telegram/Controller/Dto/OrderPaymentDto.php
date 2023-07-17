@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Telegram\Dto;
+namespace App\Telegram\Controller\Dto;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
