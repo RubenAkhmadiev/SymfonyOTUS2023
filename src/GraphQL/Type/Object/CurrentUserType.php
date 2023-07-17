@@ -38,14 +38,10 @@ class CurrentUserType extends ObjectType
 
                         $orders = $this->adapter->userOrders($user->getUserId());
 
-                        $ordersDto =  array_map(
+                        return array_map(
                             static fn(Order $order) => OrderDto::fromEntity($order),
                             $orders,
                         );
-
-                        $t = 1;
-
-                        return $ordersDto;
                     }
                 )
         );

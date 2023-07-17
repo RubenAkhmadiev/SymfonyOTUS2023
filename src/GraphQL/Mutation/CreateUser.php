@@ -29,7 +29,6 @@ class CreateUser implements MutationInterface
             )
             ->withResolver(
                 function (mixed $root, array $args): int {
-
                     $user = new User();
                     $user->setEmail($args['email']);
 
@@ -38,7 +37,6 @@ class CreateUser implements MutationInterface
                         $args['password']
                     );
                     $user->setPassword($hashedPassword);
-                    $user->setCreationDate(new DateTime());
 
                     $this->entityManager->persist($user);
                     $this->entityManager->flush();

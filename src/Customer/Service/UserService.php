@@ -2,13 +2,12 @@
 
 namespace App\Customer\Service;
 
-use App\Adapter\Dto\UserDto;
 use App\Entity\Address;
 use App\Entity\User;
 use App\Entity\UserProfile;
 use App\Entity\UserTelegram;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserService
@@ -21,11 +20,10 @@ class UserService
     }
 
     public function createOrUpdateUser(
-        string $email, string $firstName, string $secondName, string $phone, string $city, string $street, string $building
-    ): User
-    {
+        string $email,
+        string $telegramId
+    ): User {
         $userRepository = $this->entityManager->getRepository(User::class);
-        $userProfileRepository = $this->entityManager->getRepository(UserProfile::class);
         $userTelegramRepository = $this->entityManager->getRepository(UserTelegram::class);
 
         $userTelegram = $userTelegramRepository->findOneBy(['telegram_id' => $telegramId]);
@@ -38,7 +36,7 @@ class UserService
 
         $user->setEmail($email);
         $user->setPassword('nothing');
-        $user->setProfile($userProfile);
+        $user->setProfile(null);
         $this->entityManager->persist($user);
 
         $this->userTelegramService->createRelation($user->getId(), $telegramId);
@@ -47,12 +45,18 @@ class UserService
     }
 
     public function createUser(
-        string $email
-    ): User
-    {
+        string $email,
+        string $password
+    ): User {
         $user = new User();
         $user->setEmail($email);
-        $user->setPassword('nothing');
+
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            $password
+        );
+
+        $user->setPassword($hashedPassword);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
@@ -60,34 +64,63 @@ class UserService
     }
 
     public function updateUser(
-        ?int $userId, string $email
-    ): User
-    {
+        ?int $userId,
+        string $email,
+        string $password
+    ): User {
         $userRepository = $this->entityManager->getRepository(User::class);
         $user = $userRepository->find($userId);
 
         $user->setEmail($email);
-        $user->setPassword('nothing');
+
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            $password
+        );
+
+        $user->setPassword($hashedPassword);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
         return $user;
     }
 
-    public function createUserProfile($user)
+    /**
+     * @throws Exception
+     */
+    public function createUserProfile(User $user, string $firstName, string $secondName, string $phone): void
     {
-        if (!empty($user->getProfile())) {
-            $userProfile = $userProfileRepository->find($user->getProfile()->getId());
-        }
-
-        if (!$userProfile) {
+        if (!$user->getProfile()) {
             $userProfile = new UserProfile();
+            $userProfile->setUser($user);
+            $userProfile->setFirstName($firstName);
+            $userProfile->setSecondName($secondName);
+            $userProfile->setPhone($secondName);
+            $this->entityManager->persist($userProfile);
+            $this->entityManager->flush();
+        } else {
+            throw new Exception('Профиль для данного пользователя уже существует');
         }
     }
 
-    public function createUserAddress()
+    public function createUserAddress(UserProfile $userProfile, string $city, string $street, string $building): void
     {
+        $address = new Address();
+        $address->setCity($city);
+        $address->setStreet($street);
+        $address->setBuilding($building);
+        $address->setProfile($userProfile);
+        $this->entityManager->persist($address);
+        $this->entityManager->flush();
+    }
 
+    public function updateUserAddress(Address $address, string $city, string $street, string $building): void
+    {
+        $address->setCity($city);
+        $address->setStreet($street);
+        $address->setBuilding($building);
+        $this->entityManager->persist($address);
+        $this->entityManager->flush();
     }
 
     public function checkExistsUser(?int $telegramId): ?int
@@ -101,7 +134,6 @@ class UserService
 
     public function getUser(?int $userid): ?User
     {
-        $userRepository = $this->entityManager->getRepository(User::class);
-        return $userRepository->find($userid);
+        return $this->entityManager->getRepository(User::class)->find($userid);
     }
 }

@@ -18,13 +18,13 @@ class OrderService
     ) {
     }
 
-    public function createOrder(UserDto $user, OrderPaymentDto $orderPaymentDto): ?int
+    public function createOrder(UserDto $userDto, OrderPaymentDto $orderPaymentDto): ?int
     {
         $conn = $this->entityManager->getConnection();
-        $user = $this->userService->getUser($user->id);
+        $user = $this->userService->getUser($userDto->id);
 
         $order = new Order();
-        $order->setUserId($user);
+        $order->setUser($user);
         $order->setNumber(random_int(10, 100));
         $order->setSum($orderPaymentDto->sum);
         $order->setCreationDate(new DateTime());

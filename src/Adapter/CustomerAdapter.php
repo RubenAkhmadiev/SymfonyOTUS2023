@@ -7,16 +7,15 @@ use App\Adapter\Dto\UserDto;
 use App\Backoffice\Service\CategoryService;
 use App\Customer\Service\AddressService;
 use App\Customer\Service\UserProfileService;
-use App\Customer\Service\ItemService;
+use App\Customer\Service\ProductService;
 use App\Customer\Service\OrderService;
 use App\Customer\Service\UserService;
 use App\Telegram\Controller\Dto\OrderPaymentDto;
-use Doctrine\Common\Collections\Collection;
 
 class CustomerAdapter
 {
     public function __construct(
-        protected ItemService $itemService,
+        protected ProductService $productService,
         protected OrderService $orderService,
         protected CategoryService $categoryService,
         protected UserService $userService,
@@ -26,9 +25,9 @@ class CustomerAdapter
     }
 
 
-    public function getItems(int $page, int $perPage): array
+    public function getProducts(int $page, int $perPage): array
     {
-        return $this->itemService->getItems($page, $perPage);
+        return $this->productService->getProducts($page, $perPage);
     }
 
     public function getCategories(int $page, int $perPage): array
@@ -54,7 +53,7 @@ class CustomerAdapter
 
     public function createUser(OrderPaymentDto $requestDto): ?UserDto
     {
-        $user = $this->userService->createUser($requestDto->email);
+        $user = $this->userService->createUser($requestDto->email, 'nothing');
 
         $userProfile = $this->userProfileService->createUserProfile(
             $user,
@@ -75,7 +74,7 @@ class CustomerAdapter
 
     public function updateUser(?int $userId, OrderPaymentDto $requestDto): ?UserDto
     {
-        $user = $this->userService->updateUser($userId, $requestDto->email);
+        $user = $this->userService->updateUser($userId, $requestDto->email, 'nothing');
 
         $userProfile = $this->userProfileService->updateUserProfile(
             $user->getId(),

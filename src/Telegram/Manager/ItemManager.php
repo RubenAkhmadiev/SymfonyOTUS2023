@@ -2,8 +2,7 @@
 
 namespace App\Telegram\Manager;
 
-use App\Entity\Item;
-use App\Entity\Order;
+use App\BackOffice\Entity\Product;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ItemManager
@@ -15,7 +14,7 @@ class ItemManager
 
     public function getItems(int $page, int $perPage): array
     {
-        $itemRepository = $this->entityManager->getRepository(Item::class);
+        $itemRepository = $this->entityManager->getRepository(Product::class);
         $itemsCollection = $itemRepository->getItems($page, $perPage);
 
         $items = [];
