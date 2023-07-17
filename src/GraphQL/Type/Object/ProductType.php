@@ -7,7 +7,7 @@ use App\GraphQL\SchemaBuilder\TypeConfig;
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;
 
-class ItemType extends ObjectType
+class ProductType extends ObjectType
 {
     public function __construct(
         private TypeRegistry $registry,
