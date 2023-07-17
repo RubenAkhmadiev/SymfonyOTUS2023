@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutation;
 
 use App\ApiUser\CurrentUser;
 use App\Entity\Order;
+use App\Enum\OrderStatusEnum;
 use App\GraphQL\Error\ClientAwareException;
 use App\GraphQL\SchemaBuilder\Mutation;
 use App\GraphQL\TypeRegistry;
@@ -41,6 +42,7 @@ class CreateOrder implements MutationInterface
                     $order = new Order();
                     $order->setUser($user);
                     $order->setNumber(random_int(1, 100000));
+                    $order->setStatus(OrderStatusEnum::NEW->value);
                     $order->setCreationDate(new \DateTime());
                     $order->setSum(0);
 
