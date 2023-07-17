@@ -2,7 +2,7 @@
 
 namespace App\Backoffice\RequestDto\User;
 
-use App\Http\Request\RequestDtoInterface;
+use App\Http\RequestResolver\RequestDtoInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 

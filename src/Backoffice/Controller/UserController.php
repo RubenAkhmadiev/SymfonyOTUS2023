@@ -41,12 +41,16 @@ class UserController extends AbstractController
         );
 
         $body = array_map(static fn(User $user) => [
-            'id' => $user->getId(),
+            'id'    => $user->getId(),
+            'email' => $user->getEmail(),
+            'roles' => implode(', ', $user->getRoles()),
         ], $result['items']);
 
         return $this->render('backoffice/pages/users/index.html.twig', [
             'users' => (new Table())
                 ->setHeader('ID')
+                ->setHeader('Email')
+                ->setHeader('Роли')
                 ->setData($body)
                 ->setPage($dto->page, $result['has_more'], $dto->limit)
         ]);

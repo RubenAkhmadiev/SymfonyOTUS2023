@@ -46,6 +46,13 @@ final class BackofficeAdapter
         ];
     }
 
+    public function getCategoryById(int $id): CategoryDto
+    {
+        $categoryEntity = $this->categoryService->getDetail(categoryId: $id);
+
+        return CategoryDto::fromEntity($categoryEntity);
+    }
+
     /**
      * @return array{has_more: bool, items: PartnerDto[]}
      */

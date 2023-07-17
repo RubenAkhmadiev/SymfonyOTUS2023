@@ -2,13 +2,12 @@
 
 namespace App\Backoffice\RequestDto\Product;
 
-use App\Http\Request\RequestDtoInterface;
+use App\Http\RequestResolver\RequestDtoInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class IndexRequestDto implements RequestDtoInterface
 {
-
     public function __construct(
         #[Assert\Positive]
         public int $limit,
