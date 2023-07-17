@@ -1,23 +1,22 @@
 <?php
 
-namespace App\DataFixtures\Backoffice;
+namespace App\DataFixtures\Customer;
 
-use App\Backoffice\Entity\Partner;
-use App\Backoffice\Enum\PartnerTypeEnum;
+use App\Entity\Item;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 
-class PartnerFixtures extends Fixture
+class ItemFixtures  extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
 
         for ($i = 0; $i < 20; $i++) {
-            $partner = new Partner();
-            $partner->setName($faker->name);
-            $partner->setType(PartnerTypeEnum::RESTAURANT);
+            $partner = new Item();
+            $partner->setName($faker->streetSuffix);
+            $partner->setPrice($faker->randomDigit);
             $manager->persist($partner);
         }
 
