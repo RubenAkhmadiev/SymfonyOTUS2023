@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Backoffice\Entity\Product;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -30,12 +31,12 @@ class Order
     #[ORM\Column]
     private float $sum;
 
-    #[ORM\ManyToMany(targetEntity: Item::class, mappedBy: 'order')]
-    private Collection $items;
+    #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'order')]
+    private Collection $products;
 
     public function __construct()
     {
-        $this->items = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): int
@@ -92,27 +93,27 @@ class Order
     }
 
     /**
-     * @return Collection<int, Item>
+     * @return Collection<int, Product>
      */
-    public function getItems(): Collection
+    public function getProducts(): Collection
     {
-        return $this->items;
+        return $this->products;
     }
 
-    public function addItem(Item $item): static
+    public function addProduct(Product $product): static
     {
-        if (!$this->items->contains($item)) {
-            $this->items->add($item);
-            $item->addOrderId($this);
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->addOrderId($this);
         }
 
         return $this;
     }
 
-    public function removeItem(Item $item): static
+    public function removeItem(Product $product): static
     {
-        if ($this->items->removeElement($item)) {
-            $item->removeOrderId($this);
+        if ($this->products->removeElement($product)) {
+            $product->removeOrderId($this);
         }
 
         return $this;
@@ -124,6 +125,7 @@ class Order
         return [
             'id' => $this->getId(),
             'number' => $this->getNumber(),
+            'products' => $this->products->toArray(),
             'creation_date' => $this->getCreationDate(),
             'sum' => $this->getSum(),
         ];

@@ -3,6 +3,7 @@
 namespace App\Backoffice\Entity;
 
 use App\Backoffice\Repository\ProductRepository;
+use App\Entity\Order;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,12 +26,16 @@ class Product
     #[ORM\Column(type: 'decimal', scale: 2)]
     private float $price;
 
+    #[ORM\ManyToMany(targetEntity: Order::class, inversedBy: 'products')]
+    private Collection $order;
+
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'products')]
     #[ORM\JoinTable(name: 'product_category', schema: 'backoffice')]
     private Collection $categories;
 
     public function __construct()
     {
+        $this->order = new ArrayCollection();
         $this->categories = new ArrayCollection();
     }
 
@@ -71,6 +76,30 @@ class Product
     public function setPrice(float $price): static
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrderId(): Collection
+    {
+        return $this->order;
+    }
+
+    public function addOrderId(Order $orderId): static
+    {
+        if (!$this->order->contains($orderId)) {
+            $this->order->add($orderId);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderId(Order $orderId): static
+    {
+        $this->order->removeElement($orderId);
 
         return $this;
     }
