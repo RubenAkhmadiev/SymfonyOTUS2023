@@ -17,17 +17,33 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create();
+        $faker = Factory::create(locale: 'ru_RU');
 
-        for ($i = 0; $i < 20; $i++) {
-            $user = new User();
-            $user->setEmail($faker->email);
-            $user->setRoles(roles: ['ROLE_USER']);
-            $hashedPassword = $this->passwordHasher->hashPassword($user, $faker->password);
-            $user->setPassword($hashedPassword);
-            $manager->persist($user);
+        // admin
+        $adminUser = $this->makeUser(email: 'admin@site.com', roles: ['ROLE_ADMIN']);
+        $manager->persist($adminUser);
+
+        // partner
+        $partnerUser = $this->makeUser('partner_1@site.com');
+        $manager->persist($partnerUser);
+
+        // other users
+        for ($i = 0; $i < 5; $i++) {
+            $otherUser = $this->makeUser(email: $faker->email);
+            $manager->persist($otherUser);
         }
 
         $manager->flush();
+    }
+
+    private function makeUser(string $email, array $roles = [], string $password = 'password'): User
+    {
+        $user = new User();
+        $user->setEmail($email);
+        $user->setRoles(roles: array_merge(['ROLE_USER'], $roles));
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
+        $user->setPassword($hashedPassword);
+
+        return $user;
     }
 }
