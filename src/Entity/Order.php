@@ -34,6 +34,9 @@ class Order
     #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'order')]
     private Collection $products;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $status = null;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -129,5 +132,17 @@ class Order
             'creation_date' => $this->getCreationDate(),
             'sum' => $this->getSum(),
         ];
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
     }
 }
