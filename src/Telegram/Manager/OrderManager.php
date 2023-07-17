@@ -2,9 +2,9 @@
 
 namespace App\Telegram\Manager;
 
-use App\Controller\Telegram\Dto\OrderPaymentDto;
 use App\Entity\Order;
 use App\Entity\User;
+use App\Telegram\Controller\Dto\OrderPaymentDto;
 use Doctrine\ORM\EntityManagerInterface;
 use DateTime;
 
@@ -51,10 +51,11 @@ class OrderManager
     public function userOrders(int $userId): ?array
     {
         $userRepository = $this->entityManager->getRepository(User::class);
+        /* @var $user User */
         $user = $userRepository->find($userId);
 
         $arrayOrders = [];
-        foreach ($user->getOrders() as $order) {
+        foreach ($user->getProfile() as $order) {
             $arrayOrders[] = $order->toArray();
         }
 

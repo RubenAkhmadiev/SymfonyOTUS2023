@@ -2,13 +2,13 @@
 
 namespace App\GraphQL\Type;
 
+use App\Adapter\BackofficeAdapter;
+use App\Adapter\CustomerAdapter;
 use App\Adapter\Dto\CategoryDto;
 use App\Adapter\Dto\PartnerDto;
 use App\ApiUser\CurrentUser;
 use App\Backoffice\Entity\Category;
 use App\Backoffice\Entity\Partner;
-use App\Backoffice\Repository\CategoryRepository;
-use App\Backoffice\Repository\PartnerRepository;
 use App\GraphQL\Error\ClientAwareException;
 use App\GraphQL\SchemaBuilder\Argument;
 use App\GraphQL\SchemaBuilder\Field;
@@ -24,8 +24,7 @@ final class QueryType extends ObjectType
     public function __construct(
         private readonly TypeRegistry $registry,
         private readonly CurrentUser $currentUser,
-        private readonly CategoryRepository $categoryRepository,
-        private readonly PartnerRepository $partnerRepository
+        private readonly BackofficeAdapter $backofficeAdapter
     ) {
         $config = TypeConfig::create()->withFields(
 
@@ -52,26 +51,32 @@ final class QueryType extends ObjectType
                 ),
 
             Field::create('categories', $this->registry->nullableListOf($this->registry->type(CategoryType::class)))
+                ->withArguments(
+                    Argument::create('page', $this->registry->int())
+                        ->withDescription('Кол-во результатов на страницу'),
+                    Argument::create('perPage', $this->registry->int())
+                        ->withDescription('Страница'),
+                )
                 ->withResolver(
-                    function (): array {
-                        $categories = $this->categoryRepository->findAll();
+                    function (mixed $root, array $args): array {
+                        $categories = $this->backofficeAdapter->getCategories($args['perPage'], $args['page']);
 
-                        return array_map(
-                            static fn(Category $category) => CategoryDto::fromEntity($category),
-                           $categories,
-                        );
+                        return $categories['items'];
                     }
                 ),
 
             Field::create('partners', $this->registry->nullableListOf($this->registry->type(PartnerType::class)))
+                ->withArguments(
+                    Argument::create('page', $this->registry->int())
+                        ->withDescription('Кол-во результатов на страницу'),
+                    Argument::create('perPage', $this->registry->int())
+                        ->withDescription('Страница'),
+                )
                 ->withResolver(
-                    function (): array {
-                        $partners = $this->partnerRepository->findAll();
+                    function (mixed $root, array $args): array {
+                        $partners = $this->backofficeAdapter->getPartners($args['perPage'], $args['page']);
 
-                        return array_map(
-                            static fn(Partner $partner) => PartnerDto::fromEntity($partner),
-                            $partners,
-                        );
+                        return $partners['items'];
                     }
                 ),
         );

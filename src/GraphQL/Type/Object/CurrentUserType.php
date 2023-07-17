@@ -2,10 +2,14 @@
 
 namespace App\GraphQL\Type\Object;
 
+use App\Adapter\CustomerAdapter;
+use App\Adapter\Dto\OrderDto;
+use App\Adapter\Dto\UserProfileDto;
 use App\ApiUser\CurrentUser;
+use App\Entity\Order;
+use App\GraphQL\Error\ClientAwareException;
 use App\GraphQL\SchemaBuilder\Field;
 use App\GraphQL\SchemaBuilder\TypeConfig;
-use App\GraphQL\Type\Dto\UserProfileDto;
 use App\GraphQL\Type\Object\User\UserProfileType;
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;
@@ -13,7 +17,10 @@ use GraphQL\Type\Definition\ObjectType;
 class CurrentUserType extends ObjectType
 {
     public function __construct(
-        private TypeRegistry $registry,
+        private readonly TypeRegistry $registry,
+        private readonly CustomerAdapter $adapter,
+        private readonly CurrentUser $currentUser,
+
     ) {
         $profileResolver = fn(CurrentUser $user): UserProfileDto => $user->getProfile();
 
@@ -21,6 +28,22 @@ class CurrentUserType extends ObjectType
 
             Field::create('profile', $this->registry->type(UserProfileType::class))
                 ->withResolver($profileResolver),
+
+            Field::create('orders', $this->registry->nullableListOf($this->registry->type(OrderType::class)))
+                ->withResolver(
+                    function (CurrentUser $user): array {
+                        if (!$this->currentUser->isAuthorized()) {
+                            throw ClientAwareException::createAccessDenied();
+                        }
+
+                        $orders = $this->adapter->userOrders($user->getUserId());
+
+                        return array_map(
+                            static fn(Order $order) => OrderDto::fromEntity($order),
+                            $orders,
+                        );
+                    }
+                )
         );
 
         parent::__construct($config->build());

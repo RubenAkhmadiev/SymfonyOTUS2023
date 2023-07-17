@@ -6,6 +6,7 @@ use App\Adapter\Dto\UserDto;
 use App\Entity\Order;
 use App\Entity\User;
 use App\Telegram\Controller\Dto\OrderPaymentDto;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use DateTime;
 
@@ -45,13 +46,10 @@ class OrderService
     public function userOrders(int $userId): ?array
     {
         $userRepository = $this->entityManager->getRepository(User::class);
+
+        /* @var $user User */
         $user = $userRepository->find($userId);
 
-        $arrayOrders = [];
-        foreach ($user->getOrders() as $order) {
-            $arrayOrders[] = $order->toArray();
-        }
-
-        return $arrayOrders;
+        return $user->getOrders()->toArray();
     }
 }

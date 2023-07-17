@@ -4,8 +4,6 @@ namespace App\GraphQL\Type\Object\User;
 
 use App\GraphQL\SchemaBuilder\Field;
 use App\GraphQL\SchemaBuilder\TypeConfig;
-use App\GraphQL\Type\Dto\AddressDto;
-use App\GraphQL\Type\Dto\UserProfileDto;
 use App\GraphQL\Type\Object\AddressType;
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;

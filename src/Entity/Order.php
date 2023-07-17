@@ -68,12 +68,12 @@ class Order
         return $this;
     }
 
-    public function getUserId(): User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function setUserId(User $userId): static
+    public function setUser(User $userId): static
     {
         $this->user = $userId;
 

@@ -16,7 +16,9 @@ class ProductType extends ObjectType
 
             Field::create('id', $this->registry->int()),
 
-            Field::create('name', $this->registry->nullableString()),
+            Field::create('title', $this->registry->nullableString()),
+
+            Field::create('description', $this->registry->nullableString()),
 
             Field::create('price', $this->registry->nullableFloat()),
         );

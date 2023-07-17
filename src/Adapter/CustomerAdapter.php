@@ -4,18 +4,21 @@ namespace App\Adapter;
 
 use App\Adapter\Dto\UserDto;
 
+use App\Backoffice\Service\CategoryService;
 use App\Customer\Service\AddressService;
 use App\Customer\Service\UserProfileService;
 use App\Customer\Service\ItemService;
 use App\Customer\Service\OrderService;
 use App\Customer\Service\UserService;
 use App\Telegram\Controller\Dto\OrderPaymentDto;
+use Doctrine\Common\Collections\Collection;
 
 class CustomerAdapter
 {
     public function __construct(
         protected ItemService $itemService,
         protected OrderService $orderService,
+        protected CategoryService $categoryService,
         protected UserService $userService,
         protected UserProfileService $userProfileService,
         protected AddressService $addressService,
@@ -26,6 +29,11 @@ class CustomerAdapter
     public function getItems(int $page, int $perPage): array
     {
         return $this->itemService->getItems($page, $perPage);
+    }
+
+    public function getCategories(int $page, int $perPage): array
+    {
+        return $this->categoryService->getAll($page, $perPage);
     }
 
     public function checkExistsUser(?int $telegramId): ?int

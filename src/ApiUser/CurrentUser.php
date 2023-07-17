@@ -2,9 +2,8 @@
 
 namespace App\ApiUser;
 
+use App\Adapter\Dto\UserProfileDto;
 use App\Entity\Address;
-use App\GraphQL\Type\Dto\AddressDto;
-use App\GraphQL\Type\Dto\UserProfileDto;
 use App\Repository\UserProfileRepository;
 use DateTime;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -65,23 +64,7 @@ final class CurrentUser
         if ($profile === null) {
             $this->profile = UserProfileDto::createEmpty();
         } else {
-            $this->profile = new UserProfileDto(
-                id: $profile->getId(),
-                firstName: $profile->getFirstName(),
-                secondName: $profile->getSecondName(),
-                phone: $profile->getPhone(),
-                birthday: $profile->getBirthDay()->format('Y-m-d'),
-                addresses: array_map(
-                    static fn (Address $address): AddressDto =>
-                    new AddressDto(
-                        id: $address->getId(),
-                        city: $address->getCity(),
-                        street: $address->getStreet(),
-                        building: $address->getBuilding()
-                    ),
-                    $profile->getAddresses()->toArray()
-                )
-            );
+            $this->profile = UserProfileDto::fromEntity($profile);
         }
     }
 
