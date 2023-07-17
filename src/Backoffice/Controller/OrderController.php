@@ -16,6 +16,8 @@ class OrderController extends AbstractController
     )]
     public function index(): Response
     {
+        return new Response(status: Response::HTTP_NOT_FOUND);
+
         $body = [
             ['a','b','c'],
             ['c','v','h'],
