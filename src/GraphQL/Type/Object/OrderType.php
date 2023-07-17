@@ -17,13 +17,13 @@ class OrderType extends ObjectType
 
             Field::create('id', $this->registry->int()),
 
-            Field::create('user_id', $this->registry->nullableInt()),
+            Field::create('userId', $this->registry->nullableInt()),
 
             Field::create('products', $this->registry->nullableListOf($this->registry->type(ProductType::class))),
 
             Field::create('number', $this->registry->nullableString()),
 
-            Field::create('creation_date', $this->registry->nullableString()),
+            Field::create('creationDate', $this->registry->nullableString()),
 
             Field::create('sum', $this->registry->nullableFloat()),
         );
