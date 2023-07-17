@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Type;
 
+use App\Adapter\Dto\CategoryDto;
 use App\Adapter\Dto\PartnerDto;
 use App\ApiUser\CurrentUser;
 use App\Backoffice\Entity\Category;
@@ -12,7 +13,6 @@ use App\GraphQL\Error\ClientAwareException;
 use App\GraphQL\SchemaBuilder\Argument;
 use App\GraphQL\SchemaBuilder\Field;
 use App\GraphQL\SchemaBuilder\TypeConfig;
-use App\GraphQL\Type\Dto\CategoryDto;
 use App\GraphQL\Type\Object\CategoryType;
 use App\GraphQL\Type\Object\CurrentUserType;
 use App\GraphQL\Type\Object\PartnerType;
