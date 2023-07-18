@@ -32,4 +32,14 @@ class CategoryService
             'items'    => array_slice($items, 0, $limit),
         ];
     }
+
+    public function getById(int $id)  {
+        $item = $this->categoryRepository->find($id);
+
+        if ($item === null) {
+            throw new \Exception("Not found");
+        }
+
+        return $item;
+    }
 }

@@ -6,6 +6,7 @@ use App\Adapter\BackofficeAdapter;
 use App\Adapter\CustomerAdapter;
 use App\Adapter\Dto\CategoryDto;
 use App\Adapter\Dto\PartnerDto;
+use App\Adapter\Dto\ProductDto;
 use App\ApiUser\CurrentUser;
 use App\Backoffice\Entity\Category;
 use App\Backoffice\Entity\Partner;
@@ -16,6 +17,7 @@ use App\GraphQL\SchemaBuilder\TypeConfig;
 use App\GraphQL\Type\Object\CategoryType;
 use App\GraphQL\Type\Object\CurrentUserType;
 use App\GraphQL\Type\Object\PartnerType;
+use App\GraphQL\Type\Object\ProductType;
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;
 
@@ -77,6 +79,54 @@ final class QueryType extends ObjectType
                         $partners = $this->backofficeAdapter->getPartners($args['perPage'], $args['page']);
 
                         return $partners['items'];
+                    }
+                ),
+
+            Field::create('products', $this->registry->nullableListOf($this->registry->type(ProductType::class)))
+                ->withArguments(
+                    Argument::create('page', $this->registry->int())
+                        ->withDescription('Кол-во результатов на страницу'),
+                    Argument::create('perPage', $this->registry->int())
+                        ->withDescription('Страница'),
+                )
+                ->withResolver(
+                    function (mixed $root, array $args): array {
+                        $products = $this->backofficeAdapter->getProducts($args['perPage'], $args['page']);
+
+                        return $products['items'];
+                    }
+                ),
+
+            Field::create('partner', $this->registry->type(PartnerType::class))
+                ->withArguments(
+                    Argument::create('partnerId', $this->registry->int())
+                        ->withDescription('ID партнёра'),
+                )
+                ->withResolver(
+                    function (mixed $root, array $args): PartnerDto {
+                        return $this->backofficeAdapter->getPartner($args['partnerId']);
+                    }
+                ),
+
+            Field::create('category', $this->registry->type(CategoryType::class))
+                ->withArguments(
+                    Argument::create('categoryId', $this->registry->int())
+                        ->withDescription('ID категории'),
+                )
+                ->withResolver(
+                    function (mixed $root, array $args): CategoryDto {
+                        return $this->backofficeAdapter->getCategory($args['categoryId']);
+                    }
+                ),
+
+            Field::create('product', $this->registry->type(ProductType::class))
+                ->withArguments(
+                    Argument::create('productId', $this->registry->int())
+                        ->withDescription('ID продукта'),
+                )
+                ->withResolver(
+                    function (mixed $root, array $args): ProductDto {
+                        return $this->backofficeAdapter->getProduct($args['productId']);
                     }
                 ),
         );

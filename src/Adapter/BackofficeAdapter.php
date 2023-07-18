@@ -7,6 +7,7 @@ namespace App\Adapter;
 use App\Adapter\Dto\CategoryDto;
 use App\Adapter\Dto\PartnerDto;
 use App\Adapter\Dto\ProductDto;
+use App\Backoffice\Entity\Category;
 use App\Backoffice\Entity\Category as CategoryEntity;
 use App\Backoffice\Entity\Partner as PartnerEntity;
 use App\Backoffice\Entity\Product as ProductEntity;
@@ -18,8 +19,8 @@ final class BackofficeAdapter
 {
     public function __construct(
         protected CategoryService $categoryService,
-        protected PartnerService  $partnerService,
-        protected ProductService  $productService,
+        protected PartnerService $partnerService,
+        protected ProductService $productService,
     ) {
     }
 
@@ -39,7 +40,7 @@ final class BackofficeAdapter
 
         return [
             'has_more' => $result['has_more'],
-            'items'    => array_map(
+            'items' => array_map(
                 static fn(CategoryEntity $categoryEntity) => CategoryDto::fromEntity($categoryEntity),
                 $result['items'],
             ),
@@ -62,7 +63,7 @@ final class BackofficeAdapter
 
         return [
             'has_more' => $result['has_more'],
-            'items'    => array_map(
+            'items' => array_map(
                 static fn(PartnerEntity $partnerEntity) => PartnerDto::fromEntity($partnerEntity),
                 $result['items'],
             ),
@@ -85,10 +86,31 @@ final class BackofficeAdapter
 
         return [
             'has_more' => $result['has_more'],
-            'items'    => array_map(
+            'items' => array_map(
                 static fn(ProductEntity $productEntity) => ProductDto::fromEntity($productEntity),
                 $result['items'],
             ),
         ];
+    }
+
+    public function getCategory(
+        int $categoryId
+    ): CategoryDto {
+        $category = $this->categoryService->getById($categoryId);
+        return CategoryDto::fromEntity($category);
+    }
+
+    public function getPartner(
+        int $partnerId
+    ): PartnerDto {
+        $partner = $this->partnerService->getById($partnerId);
+        return PartnerDto::fromEntity($partner);
+    }
+
+    public function getProduct(
+        int $productId
+    ): ProductDto {
+        $product = $this->productService->getById($productId);
+        return ProductDto::fromEntity($product);
     }
 }
