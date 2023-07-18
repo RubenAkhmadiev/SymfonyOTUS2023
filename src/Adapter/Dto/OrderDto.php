@@ -13,6 +13,7 @@ class OrderDto
         readonly public int $id,
         readonly public ?int $userId,
         readonly public ?string $number,
+        readonly public ?string $status,
         readonly public ?string $creationDate,
         readonly public ?float $sum = null,
         readonly public ?array $products = []
@@ -25,6 +26,7 @@ class OrderDto
             id: $order->getId(),
             userId: $order->getUser()->getId(),
             number: $order->getNumber(),
+            status: $order->getStatus(),
             creationDate: $order->getCreationDate()->format('Y-m-d H:i:s'),
             sum: $order->getSum(),
             products: array_map(
