@@ -10,6 +10,7 @@ use App\Customer\Service\UserProfileService;
 use App\Customer\Service\ProductService;
 use App\Customer\Service\OrderService;
 use App\Customer\Service\UserService;
+use App\Entity\User;
 use App\Telegram\Controller\Dto\OrderPaymentDto;
 
 class CustomerAdapter
@@ -91,5 +92,15 @@ class CustomerAdapter
         );
 
         return UserDto::fromEntity($user);
+    }
+
+    public function addProductsToOrder(User $user, int $orderId, array $productIds): void
+    {
+        $this->orderService->addProductsToOrder($user, $orderId, $productIds);
+    }
+
+    public function cancelOrder(User $user, int $orderId): void
+    {
+        $this->orderService->addProductsToOrder($user, $orderId, $productIds);
     }
 }
