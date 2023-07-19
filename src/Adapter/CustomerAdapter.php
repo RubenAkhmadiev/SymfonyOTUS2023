@@ -107,7 +107,7 @@ class CustomerAdapter
 
     public function cancelOrder(User $user, int $orderId): void
     {
-        $this->orderService->addProductsToOrder($user, $orderId, $productIds);
+        $this->orderService->cancelOrder($user, $orderId);
     }
 
     public function getOrders(int $page, int $limit): array
