@@ -100,4 +100,14 @@ class OrderService
 
         return $user->getOrders()->toArray();
     }
+
+    public function getOrders(int $page, int $limit): ?array
+    {
+        $productRepository = $this->entityManager->getRepository(Order::class);
+        return $productRepository->findBy(
+            criteria: [],
+            limit: $limit + 1,
+            offset: $limit * $page
+        );
+    }
 }

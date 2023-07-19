@@ -2,8 +2,10 @@
 
 namespace App\Adapter;
 
+use App\Adapter\Dto\OrderDto;
 use App\Adapter\Dto\UserDto;
 
+use App\Backoffice\Entity\Product;
 use App\Backoffice\Service\CategoryService;
 use App\Customer\Service\AddressService;
 use App\Customer\Service\UserProfileService;
@@ -106,5 +108,14 @@ class CustomerAdapter
     public function cancelOrder(User $user, int $orderId): void
     {
         $this->orderService->addProductsToOrder($user, $orderId, $productIds);
+    }
+
+    public function getOrders(int $page, int $limit): array
+    {
+        $ordersCollection = $this->orderService->getOrders($page, $limit);
+
+        return array_map(function ($order) {
+            return OrderDto::fromEntity($order);
+        }, $ordersCollection);
     }
 }
