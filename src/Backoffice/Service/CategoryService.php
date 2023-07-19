@@ -4,6 +4,7 @@ namespace App\Backoffice\Service;
 
 use App\Backoffice\Entity\Category;
 use App\Backoffice\Repository\CategoryRepository;
+use App\Exception\NotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CategoryService
@@ -31,6 +32,47 @@ class CategoryService
             'has_more' => count($items) > $limit,
             'items'    => array_slice($items, 0, $limit),
         ];
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function getDetail(int $categoryId): Category
+    {
+        $category = $this->categoryRepository->find($categoryId);
+
+        if (is_null($category)) {
+            throw new NotFoundException();
+        }
+
+        return $category;
+    }
+
+    public function createCategory(string $name): Category
+    {
+        $category = new Category();
+        $category->setName($name);
+        $this->em->persist($category);
+        $this->em->flush();
+
+        return $category;
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function updateCategory(int $categoryId, string $name): Category
+    {
+        $category = $this->categoryRepository->find($categoryId);
+
+        if (is_null($category)) {
+            throw new NotFoundException();
+        }
+
+        $category->setName($name);
+        $this->em->flush();
+
+        return $category;
     }
 
     public function getById(int $id)  {

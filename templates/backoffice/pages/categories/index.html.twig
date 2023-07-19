@@ -1,9 +1,10 @@
 {% extends 'backoffice/components/wrapper.html.twig' %}
 
-{% block title %}Categories{% endblock %}
+{% block title %}Категории{% endblock %}
 
 {% block content %}
-    Index Categories
+    Категории
 
+    <a href="{{ path('app_backoffice_categories_create') }}">Создать категорию</a>
     {% include 'backoffice/components/table.html.twig' with {'items': categories} only %}
 {% endblock %}
