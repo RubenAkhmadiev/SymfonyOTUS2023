@@ -127,4 +127,13 @@ class Product
 
         return $this;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'title' => $this->getTitle(),
+            'price' => $this->getPrice(),
+        ];
+    }
 }

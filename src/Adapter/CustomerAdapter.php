@@ -28,7 +28,11 @@ class CustomerAdapter
 
     public function getProducts(int $page, int $perPage): array
     {
-        return $this->productService->getProducts($page, $perPage);
+        $productCollection = $this->productService->getProducts($page, $perPage);
+
+        return array_map(function($product) {
+            return $product->toArray();
+        }, $productCollection);
     }
 
     public function getCategories(int $page, int $perPage): array

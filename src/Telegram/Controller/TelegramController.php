@@ -30,7 +30,7 @@ class TelegramController extends AbstractController
         $page = (int) $request->query->get('page', 0);
         $perPage = (int) $request->query->get('perPage', 6);
 
-        $items = $this->customerAdapter->getItems($page, $perPage);
+        $items = $this->customerAdapter->getProducts($page, $perPage);
         return new JsonResponse($items, Response::HTTP_OK);
     }
 
