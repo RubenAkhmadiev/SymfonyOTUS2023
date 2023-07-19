@@ -74,4 +74,14 @@ class CategoryService
 
         return $category;
     }
+
+    public function getById(int $id)  {
+        $item = $this->categoryRepository->find($id);
+
+        if ($item === null) {
+            throw new \Exception("Not found");
+        }
+
+        return $item;
+    }
 }

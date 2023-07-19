@@ -97,7 +97,7 @@ let showProduct = function(item) {
   let itemMenuTitleDiv = document.createElement("div");
   itemMenuTitleDiv.classList = "item-menu-title";
   itemMenuTitleDiv.setAttribute('data-id', item.id)
-  itemMenuTitleDiv.innerHTML = item.name.slice(0, 5);
+  itemMenuTitleDiv.innerHTML = item.title.slice(0, 5);
 
   let itemMenuImg = document.createElement("img");
   itemMenuImg.src = "/images/imageFood.jpg";

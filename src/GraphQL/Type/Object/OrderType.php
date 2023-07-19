@@ -23,6 +23,8 @@ class OrderType extends ObjectType
 
             Field::create('number', $this->registry->nullableString()),
 
+            Field::create('status', $this->registry->nullableString()),
+
             Field::create('creationDate', $this->registry->nullableString()),
 
             Field::create('sum', $this->registry->nullableFloat()),

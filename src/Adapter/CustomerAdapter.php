@@ -2,14 +2,17 @@
 
 namespace App\Adapter;
 
+use App\Adapter\Dto\OrderDto;
 use App\Adapter\Dto\UserDto;
 
+use App\Backoffice\Entity\Product;
 use App\Backoffice\Service\CategoryService;
 use App\Customer\Service\AddressService;
 use App\Customer\Service\UserProfileService;
 use App\Customer\Service\ProductService;
 use App\Customer\Service\OrderService;
 use App\Customer\Service\UserService;
+use App\Entity\User;
 use App\Telegram\Controller\Dto\OrderPaymentDto;
 
 class CustomerAdapter
@@ -27,7 +30,11 @@ class CustomerAdapter
 
     public function getProducts(int $page, int $perPage): array
     {
-        return $this->productService->getProducts($page, $perPage);
+        $productCollection = $this->productService->getProducts($page, $perPage);
+
+        return array_map(function($product) {
+            return $product->toArray();
+        }, $productCollection);
     }
 
     public function getCategories(int $page, int $perPage): array
@@ -91,5 +98,24 @@ class CustomerAdapter
         );
 
         return UserDto::fromEntity($user);
+    }
+
+    public function addProductsToOrder(User $user, int $orderId, array $productIds): void
+    {
+        $this->orderService->addProductsToOrder($user, $orderId, $productIds);
+    }
+
+    public function cancelOrder(User $user, int $orderId): void
+    {
+        $this->orderService->cancelOrder($user, $orderId);
+    }
+
+    public function getOrders(int $page, int $limit): array
+    {
+        $ordersCollection = $this->orderService->getOrders($page, $limit);
+
+        return array_map(function ($order) {
+            return OrderDto::fromEntity($order);
+        }, $ordersCollection);
     }
 }

@@ -17,6 +17,8 @@ final class MutationType extends ObjectType
             $container->get(Mutation\CreateUserProfileAddress::class),
             $container->get(Mutation\CreateUser::class),
             $container->get(Mutation\CreateOrder::class),
+            $container->get(Mutation\AddProductsToOrder::class),
+            $container->get(Mutation\CancelOrder::class),
             $container->get(Mutation\UpdateUserProfile::class),
             $container->get(Mutation\UpdateUserProfileAddress::class),
         ];

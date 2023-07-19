@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Backoffice\Entity\Product;
+use App\Enum\OrderStatusEnum;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -108,6 +109,7 @@ class Order
         if (!$this->products->contains($product)) {
             $this->products->add($product);
             $product->addOrderId($this);
+            $this->setSum($this->getSum() + $product->getPrice());
         }
 
         return $this;
@@ -139,9 +141,9 @@ class Order
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(OrderStatusEnum $status): static
     {
-        $this->status = $status;
+        $this->status = $status->value;
 
         return $this;
     }

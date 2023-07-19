@@ -3,10 +3,12 @@
 namespace App\Customer\Service;
 
 use App\Adapter\Dto\UserDto;
+use App\Backoffice\Repository\ProductRepository;
 use App\Entity\Order;
 use App\Entity\User;
+use App\Enum\OrderStatusEnum;
+use App\Repository\OrderRepository;
 use App\Telegram\Controller\Dto\OrderPaymentDto;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use DateTime;
 
@@ -14,7 +16,9 @@ class OrderService
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly UserService $userService
+        private readonly UserService $userService,
+        private readonly OrderRepository $orderRepository,
+        private readonly ProductRepository $productRepository
     ) {
     }
 
@@ -43,6 +47,50 @@ class OrderService
         return $order->getId();
     }
 
+    public function addProductsToOrder(User $user, int $orderId, array $productIds): void
+    {
+        $order = $this->orderRepository->findOneBy(
+            [
+                'id' => $orderId,
+                'user' => $user->getId()
+            ]
+        );
+
+        if ($order === null) {
+            throw new \Exception('Заказ не найден');
+        }
+
+        $products = $this->productRepository->findBy(['id' => $productIds]);
+
+        if (!empty($products)) {
+            foreach ($products as $product) {
+                $order->addProduct($product);
+            }
+
+            $order->setStatus(OrderStatusEnum::PROCESS);
+            $this->entityManager->persist($order);
+            $this->entityManager->flush();
+        }
+    }
+
+    public function cancelOrder(User $user, int $orderId): void
+    {
+        $order = $this->orderRepository->findOneBy(
+            [
+                'id' => $orderId,
+                'user' => $user->getId()
+            ]
+        );
+
+        if ($order === null) {
+            throw new \Exception('Заказ не найден');
+        }
+
+        $order->setStatus(OrderStatusEnum::CANCELED);
+        $this->entityManager->persist($order);
+        $this->entityManager->flush();
+    }
+
     public function userOrders(int $userId): ?array
     {
         $userRepository = $this->entityManager->getRepository(User::class);
@@ -51,5 +99,15 @@ class OrderService
         $user = $userRepository->find($userId);
 
         return $user->getOrders()->toArray();
+    }
+
+    public function getOrders(int $page, int $limit): ?array
+    {
+        $productRepository = $this->entityManager->getRepository(Order::class);
+        return $productRepository->findBy(
+            criteria: [],
+            limit: $limit + 1,
+            offset: $limit * $page
+        );
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Customer\Service;
 
 use App\Backoffice\Entity\Product;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ProductService
@@ -12,20 +13,13 @@ class ProductService
     ) {
     }
 
-    public function getProducts(int $page, int $limit): array
+    public function getProducts(int $page, int $limit): ?array
     {
         $productRepository = $this->entityManager->getRepository(Product::class);
-        $productsCollection = $productRepository->findBy(
+        return $productRepository->findBy(
             criteria: [],
             limit: $limit + 1,
             offset: $limit * $page
         );
-
-        $products = [];
-        foreach ($productsCollection as $product) {
-            $products[] = $product->toArray();
-        }
-
-        return $products;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Customer\Service;
 
+use App\Backoffice\Entity\Product;
 use App\Entity\Address;
 use App\Entity\User;
 use App\Entity\UserProfile;
@@ -132,8 +133,17 @@ class UserService
         return !empty($userTelegram) ? $userTelegram->getUserId() : null;
     }
 
-    public function getUser(?int $userid): ?User
+    public function getUser(?int $userId): ?User
     {
-        return $this->entityManager->getRepository(User::class)->find($userid);
+        return $this->entityManager->getRepository(User::class)->find($userId);
+    }
+
+    public function getUsers(int $page = 1, int $limit = 10): array
+    {
+        return $this->entityManager->getRepository(User::class)->findBy(
+            criteria: [],
+            limit: $limit + 1,
+            offset: $limit * $page
+        );
     }
 }

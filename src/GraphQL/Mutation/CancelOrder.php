@@ -2,34 +2,34 @@
 
 namespace App\GraphQL\Mutation;
 
+use App\Adapter\CustomerAdapter;
 use App\ApiUser\CurrentUser;
-use App\Entity\Order;
-use App\Enum\OrderStatusEnum;
 use App\GraphQL\Error\ClientAwareException;
+use App\GraphQL\SchemaBuilder\Argument;
 use App\GraphQL\SchemaBuilder\Mutation;
 use App\GraphQL\TypeRegistry;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
-use Symfony\Component\Validator\Constraints\Date;
 
-class CreateOrder implements MutationInterface
+class CancelOrder implements MutationInterface
 {
     public function __construct(
         private TypeRegistry $registry,
-        private EntityManagerInterface $entityManager,
         private CurrentUser $currentUser,
         private UserRepository $userRepository,
+        private CustomerAdapter $customerAdapter,
     ) {
     }
 
     public function build(): array
     {
-        return Mutation::create($this->registry->bigInt())
+        return Mutation::create($this->registry->string())
             ->withDescription('Создание заказа')
+            ->withArguments(
+                Argument::create('orderId', $this->registry->int())->withDescription('ID заказа')
+            )
             ->withResolver(
-                function (): int {
-
+                function (mixed $root, array $args): int {
                     if (!$this->currentUser->isAuthorized()) {
                         throw ClientAwareException::createAccessDenied();
                     }
@@ -39,20 +39,11 @@ class CreateOrder implements MutationInterface
                         throw new UserNotFoundException('Данный пользователь не найден');
                     }
 
-                    $order = new Order();
-                    $order->setUser($user);
-                    $order->setNumber(random_int(1, 100000));
-                    $order->setStatus(OrderStatusEnum::NEW);
-                    $order->setCreationDate(new \DateTime());
-                    $order->setSum(0);
+                    $orderId = $args['orderId'];
 
-                    $user->addOrder($order);
+                    $this->customerAdapter->cancelOrder($user, $orderId);
 
-                    $this->entityManager->persist($order);
-                    $this->entityManager->persist($user);
-                    $this->entityManager->flush();
-
-                    return $order->getId();
+                    return "Заказ отменён";
                 }
             )
             ->build();
