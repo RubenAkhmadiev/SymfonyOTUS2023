@@ -13,6 +13,7 @@ final class MutationType extends ObjectType
         // Общий список мутаций
         $mutations = [
             $container->get(Mutation\AuthenticateByPassword::class),
+            $container->get(Mutation\Logout::class),
             $container->get(Mutation\CreateUserProfile::class),
             $container->get(Mutation\CreateUserProfileAddress::class),
             $container->get(Mutation\CreateUser::class),

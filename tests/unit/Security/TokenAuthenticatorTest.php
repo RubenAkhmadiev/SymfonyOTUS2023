@@ -25,7 +25,7 @@ class TokenAuthenticatorTest extends TestCase
     private UserProviderInterface $userProvider;
     private array $userCredentials;
 
-    function setUp(): void
+    public function setUp(): void
     {
         $this->manager = $this->createMock(TokenManager::class);
         $this->authenticator = new TokenAuthenticator(
@@ -43,7 +43,7 @@ class TokenAuthenticatorTest extends TestCase
         ];
     }
 
-    public function testStart()
+    public function testStart(): void
     {
         $result = $this->authenticator->start($this->request);
         $resultData = json_decode($result->getContent(), true);
@@ -56,12 +56,12 @@ class TokenAuthenticatorTest extends TestCase
         $this->assertSame(JsonResponse::HTTP_UNAUTHORIZED, $result->getStatusCode());
     }
 
-    public function testSupportsRememberMe()
+    public function testSupportsRememberMe(): void
     {
         $this->assertFalse($this->authenticator->supportsRememberMe());
     }
 
-    public function testOnAuthenticationFailure()
+    public function testOnAuthenticationFailure(): void
     {
         $result = $this->authenticator->onAuthenticationFailure(
             $this->request,
@@ -77,7 +77,7 @@ class TokenAuthenticatorTest extends TestCase
         $this->assertSame(JsonResponse::HTTP_FORBIDDEN, $result->getStatusCode());
     }
 
-    public function testOnAuthenticationFailureGraphql()
+    public function testOnAuthenticationFailureGraphql(): void
     {
         $request = Request::create('/graphql');
         $result = $this->authenticator->onAuthenticationFailure(
@@ -88,7 +88,7 @@ class TokenAuthenticatorTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testCheckCredentials()
+    public function testCheckCredentials(): void
     {
         $this->assertTrue(
             $this->authenticator->checkCredentials(
@@ -98,7 +98,7 @@ class TokenAuthenticatorTest extends TestCase
         );
     }
 
-    public function testGetCredentialsEmpty()
+    public function testGetCredentialsEmpty(): void
     {
         $result = $this->authenticator->getCredentials($this->request);
 
@@ -107,7 +107,7 @@ class TokenAuthenticatorTest extends TestCase
         $this->assertEquals("", $result['token']);
     }
 
-    public function testGetCredentials()
+    public function testGetCredentials(): void
     {
         $expectedToken = 'token';
         $request = new Request();
@@ -121,7 +121,7 @@ class TokenAuthenticatorTest extends TestCase
         $this->assertEquals($expectedToken, $result['token']);
     }
 
-    public function testSupports()
+    public function testSupports(): void
     {
         $request = new Request();
         $request->headers = new HeaderBag([
@@ -135,7 +135,7 @@ class TokenAuthenticatorTest extends TestCase
         $this->assertFalse($this->authenticator->supports($request));
     }
 
-    public function testOnAuthenticationSuccess()
+    public function testOnAuthenticationSuccess(): void
     {
         $this->assertNull(
             $this->authenticator->onAuthenticationSuccess(
@@ -146,12 +146,12 @@ class TokenAuthenticatorTest extends TestCase
         );
     }
 
-    public function testGetUserNoCredentials()
+    public function testGetUserNoCredentials(): void
     {
         $this->assertNull($this->authenticator->getUser(["token" => null], $this->userProvider));
     }
 
-    public function testGetUserIdNotFound()
+    public function testGetUserIdNotFound(): void
     {
         $this->assertNull(
             $this->authenticator->getUser(
