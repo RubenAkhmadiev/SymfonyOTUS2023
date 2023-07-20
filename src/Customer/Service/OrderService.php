@@ -101,13 +101,17 @@ class OrderService
         return $user->getOrders()->toArray();
     }
 
-    public function getOrders(int $page, int $limit): ?array
+    public function getOrders(int $page, int $limit): array
     {
-        $productRepository = $this->entityManager->getRepository(Order::class);
-        return $productRepository->findBy(
+        $items = $this->orderRepository->findBy(
             criteria: [],
             limit: $limit + 1,
-            offset: $limit * $page
+            offset: $limit * $page,
         );
+
+        return [
+            'has_more' => count($items) > $limit,
+            'items'    => array_slice($items, 0, $limit),
+        ];
     }
 }

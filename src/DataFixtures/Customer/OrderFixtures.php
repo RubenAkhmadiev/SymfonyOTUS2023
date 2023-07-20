@@ -7,6 +7,7 @@ use App\Backoffice\Enum\PartnerTypeEnum;
 use App\Customer\Service\ProductService;
 use App\Customer\Service\UserService;
 use App\Entity\Order;
+use App\Enum\OrderStatusEnum;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,6 +31,7 @@ class OrderFixtures extends Fixture implements OrderedFixtureInterface
             $order->setSum($faker->randomDigit);
             $order->setNumber($faker->randomDigit);
             $order->setCreationDate($faker->dateTime);
+            $order->setStatus(OrderStatusEnum::NEW);
 
             $products = $this->productService->getProducts(1, 10);
 

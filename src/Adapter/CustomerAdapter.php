@@ -4,14 +4,13 @@ namespace App\Adapter;
 
 use App\Adapter\Dto\OrderDto;
 use App\Adapter\Dto\UserDto;
-
-use App\Backoffice\Entity\Product;
 use App\Backoffice\Service\CategoryService;
 use App\Customer\Service\AddressService;
 use App\Customer\Service\UserProfileService;
 use App\Customer\Service\ProductService;
 use App\Customer\Service\OrderService;
 use App\Customer\Service\UserService;
+use App\Entity\Order as OrderEntity;
 use App\Entity\User;
 use App\Telegram\Controller\Dto\OrderPaymentDto;
 
@@ -112,10 +111,14 @@ class CustomerAdapter
 
     public function getOrders(int $page, int $limit): array
     {
-        $ordersCollection = $this->orderService->getOrders($page, $limit);
+        $result = $this->orderService->getOrders($page, $limit);
 
-        return array_map(function ($order) {
-            return OrderDto::fromEntity($order);
-        }, $ordersCollection);
+        return [
+            'has_more' => $result['has_more'],
+            'items'    => array_map(
+                static fn(OrderEntity $productEntity) => OrderDto::fromEntity($productEntity),
+                $result['items'],
+            ),
+        ];
     }
 }
